@@ -1,0 +1,6 @@
+{
+  "name": "SupplyGraph AI",
+  "description": "Governed Conversational Supply Chain Analytics — One governed source of truth across Planning, Procurement, and Logistics.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
