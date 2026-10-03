@@ -43,16 +43,16 @@ export const TestRunnerView: React.FC = () => {
   return (
     <div className="max-w-6xl mx-auto space-y-6 pb-16">
       {/* Header */}
-      <div className="bg-slate-900 border border-slate-800 rounded-xl p-5 shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+      <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-xs flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div>
           <div className="flex items-center space-x-2">
-            <span className="px-2.5 py-0.5 rounded text-[11px] font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center gap-1">
-              <CheckCircle2 className="w-3.5 h-3.5" /> Automated Verification Suite
+            <span className="px-2.5 py-0.5 rounded text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200 flex items-center gap-1">
+              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" /> Automated Governance Gate
             </span>
-            <span className="text-xs text-slate-400">Continuous Governance CI/CD Gate</span>
+            <span className="text-xs text-slate-500">Continuous Assurance Verification</span>
           </div>
-          <h1 className="text-xl font-bold text-white mt-1">Automated System Health & Test Suite</h1>
-          <p className="text-sm text-slate-400 mt-0.5">
+          <h1 className="text-xl font-bold text-slate-900 mt-1">Automated System Health & Test Suite</h1>
+          <p className="text-sm text-slate-600 mt-0.5">
             Full compliance suite verifying Ontology constraints, Canonical formulas, SQL injection blocks, and Cross-Persona parity.
           </p>
         </div>
@@ -60,14 +60,14 @@ export const TestRunnerView: React.FC = () => {
         <button
           onClick={executeTests}
           disabled={isRunning}
-          className="px-4 py-2.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-xs flex items-center space-x-2 transition-all shadow-md shadow-indigo-600/20 disabled:opacity-50"
+          className="px-4 py-2 text-xs font-semibold rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white flex items-center space-x-2 shadow-xs transition-colors disabled:opacity-50"
         >
           {isRunning ? (
             <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
           ) : (
             <>
               <RotateCcw className="w-4 h-4" />
-              <span>Run Automated Test Suite</span>
+              <span>Run Automated Suite</span>
             </>
           )}
         </button>
@@ -76,33 +76,33 @@ export const TestRunnerView: React.FC = () => {
       {/* Summary Scorecard */}
       {report && (
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div className="bg-slate-900 border border-slate-800 rounded-xl p-4">
-            <div className="text-xs text-slate-400">Total Test Cases</div>
-            <div className="text-2xl font-black text-white font-mono mt-1">{report.totalTests}</div>
-            <div className="text-[10px] text-slate-400 mt-1">Across 5 Governance Layers</div>
+          <div className="bg-white border border-slate-200 rounded-xl p-4 shadow-xs">
+            <div className="text-xs font-semibold text-slate-500">Total Test Cases</div>
+            <div className="text-2xl font-black text-slate-900 font-mono mt-1">{report.totalTests}</div>
+            <div className="text-[10px] text-slate-400 mt-0.5">Across 5 Governance Layers</div>
           </div>
 
-          <div className="bg-slate-900 border border-emerald-500/40 rounded-xl p-4">
-            <div className="text-xs text-emerald-400 font-semibold">Passing Tests</div>
-            <div className="text-2xl font-black text-emerald-400 font-mono mt-1">{report.passedTests}</div>
-            <div className="text-[10px] text-emerald-400/80 mt-1">100% Pass Rate</div>
+          <div className="bg-white border border-emerald-200 rounded-xl p-4 shadow-xs bg-emerald-50/30">
+            <div className="text-xs font-semibold text-emerald-700">Passing Tests</div>
+            <div className="text-2xl font-black text-emerald-700 font-mono mt-1">{report.passedTests}</div>
+            <div className="text-[10px] text-emerald-600 mt-0.5 font-medium">100% Pass Rate</div>
           </div>
 
-          <div className="bg-slate-900 border border-slate-800 rounded-xl p-4">
-            <div className="text-xs text-slate-400">Failed Tests</div>
-            <div className="text-2xl font-black text-slate-400 font-mono mt-1">{report.failedTests}</div>
-            <div className="text-[10px] text-slate-400 mt-1">Zero Regressions</div>
+          <div className="bg-white border border-slate-200 rounded-xl p-4 shadow-xs">
+            <div className="text-xs font-semibold text-slate-500">Failed Tests</div>
+            <div className="text-2xl font-black text-slate-900 font-mono mt-1">{report.failedTests}</div>
+            <div className="text-[10px] text-slate-400 mt-0.5">Zero Regressions</div>
           </div>
 
-          <div className="bg-slate-900 border border-slate-800 rounded-xl p-4">
-            <div className="text-xs text-slate-400">Execution Latency</div>
-            <div className="text-2xl font-black text-indigo-400 font-mono mt-1">{report.durationMs}ms</div>
-            <div className="text-[10px] text-slate-400 mt-1">Sub-second execution</div>
+          <div className="bg-white border border-slate-200 rounded-xl p-4 shadow-xs">
+            <div className="text-xs font-semibold text-slate-500">Execution Latency</div>
+            <div className="text-2xl font-black text-indigo-700 font-mono mt-1">{report.durationMs}ms</div>
+            <div className="text-[10px] text-slate-400 mt-0.5">Sub-second validation</div>
           </div>
         </div>
       )}
 
-      {/* Category Filter Tabs */}
+      {/* Category Tabs */}
       <div className="flex flex-wrap gap-2">
         {categories.map((cat) => (
           <button
@@ -110,8 +110,8 @@ export const TestRunnerView: React.FC = () => {
             onClick={() => setSelectedCategory(cat)}
             className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-colors ${
               selectedCategory === cat
-                ? 'bg-indigo-600 text-white shadow-sm'
-                : 'bg-slate-800/80 hover:bg-slate-700 text-slate-300 border border-slate-700'
+                ? 'bg-indigo-600 text-white shadow-xs font-semibold'
+                : 'bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 shadow-xs'
             }`}
           >
             {cat}
@@ -120,32 +120,34 @@ export const TestRunnerView: React.FC = () => {
       </div>
 
       {/* Test Results Table */}
-      <div className="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden shadow-sm">
-        <div className="p-4 border-b border-slate-800 flex items-center justify-between">
-          <h2 className="text-sm font-bold text-white">Test Case Assertions & Evidence</h2>
-          <span className="text-xs text-slate-400">{filteredResults.length} Assertions</span>
+      <div className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-xs">
+        <div className="p-4 border-b border-slate-200 flex items-center justify-between">
+          <h2 className="text-sm font-bold text-slate-900">Test Case Assertions & Evidence ({filteredResults.length})</h2>
+          <span className="text-xs text-slate-500 font-medium">Strict Verification</span>
         </div>
 
-        <div className="divide-y divide-slate-800">
+        <div className="divide-y divide-slate-100">
           {filteredResults.map((t, idx) => (
-            <div key={idx} className="p-4 hover:bg-slate-800/30 transition-colors space-y-2">
+            <div key={idx} className="p-4 hover:bg-slate-50/80 transition-colors space-y-2">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                 <div className="flex items-center space-x-2.5">
                   {t.passed ? (
-                    <CheckCircle2 className="w-4 h-4 text-emerald-400 flex-shrink-0" />
+                    <CheckCircle2 className="w-4 h-4 text-emerald-600 flex-shrink-0" />
                   ) : (
-                    <XCircle className="w-4 h-4 text-rose-400 flex-shrink-0" />
+                    <XCircle className="w-4 h-4 text-rose-600 flex-shrink-0" />
                   )}
-                  <div className="font-semibold text-white text-xs">{t.name}</div>
-                  <span className="px-2 py-0.5 rounded bg-slate-800 text-slate-400 text-[10px] font-mono">
+                  <div className="font-semibold text-slate-900 text-xs">{t.name}</div>
+                  <span className="px-2 py-0.5 rounded bg-slate-100 text-slate-600 text-[10px] font-mono border border-slate-200">
                     {t.category}
                   </span>
                 </div>
 
                 <div className="flex items-center space-x-3 text-xs">
-                  <span className="font-mono text-slate-400 text-[11px]">{t.executionTimeMs}ms</span>
+                  <span className="font-mono text-slate-500 text-[11px]">{t.executionTimeMs}ms</span>
                   <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
-                    t.passed ? 'bg-emerald-500/15 text-emerald-400' : 'bg-rose-500/15 text-rose-400'
+                    t.passed
+                      ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                      : 'bg-rose-50 text-rose-700 border border-rose-200'
                   }`}>
                     {t.passed ? 'PASSED' : 'FAILED'}
                   </span>
@@ -153,16 +155,16 @@ export const TestRunnerView: React.FC = () => {
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-[11px] pl-6">
-                <div className="p-2 rounded bg-slate-950/60 border border-slate-800/80 text-slate-400">
-                  <span className="font-medium text-slate-300">Expected:</span> {t.expected}
+                <div className="p-2 rounded-lg bg-slate-50 border border-slate-200 text-slate-600">
+                  <span className="font-semibold text-slate-800">Expected:</span> {t.expected}
                 </div>
-                <div className="p-2 rounded bg-slate-950/60 border border-slate-800/80 text-emerald-300">
-                  <span className="font-medium text-slate-300">Actual:</span> {t.actual}
+                <div className="p-2 rounded-lg bg-slate-50 border border-slate-200 text-emerald-800">
+                  <span className="font-semibold text-slate-800">Actual:</span> {t.actual}
                 </div>
               </div>
 
               {t.details && (
-                <div className="pl-6 text-[10px] text-slate-400 italic">
+                <div className="pl-6 text-[10px] text-slate-500 italic">
                   Note: {t.details}
                 </div>
               )}

@@ -16,24 +16,32 @@ export default function App() {
   const [activeTab, setActiveTab] = useState<ActiveTab>('dashboard');
   const [currentPersona, setCurrentPersona] = useState<PersonaType>('Planning');
   const [isDemoModalOpen, setIsDemoModalOpen] = useState(false);
+  const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans selection:bg-indigo-500 selection:text-white">
+    <div className="min-h-screen bg-slate-50 text-slate-800 flex flex-col font-sans antialiased selection:bg-indigo-600 selection:text-white">
       {/* Top Bar */}
       <TopBar
         currentPersona={currentPersona}
         onSelectPersona={setCurrentPersona}
         onOpenDemoTour={() => setIsDemoModalOpen(true)}
         onRunQuickConsistencyTest={() => setActiveTab('consistency')}
+        activeTab={activeTab}
+        onToggleMobileSidebar={() => setIsMobileSidebarOpen(prev => !prev)}
       />
 
       {/* Main Body */}
       <div className="flex-1 flex overflow-hidden">
         {/* Sidebar Navigation */}
-        <Sidebar activeTab={activeTab} onSelectTab={setActiveTab} />
+        <Sidebar
+          activeTab={activeTab}
+          onSelectTab={setActiveTab}
+          isOpenMobile={isMobileSidebarOpen}
+          onCloseMobile={() => setIsMobileSidebarOpen(false)}
+        />
 
-        {/* Dynamic Content Area */}
-        <main className="flex-1 overflow-y-auto p-6 md:p-8 bg-slate-950">
+        {/* Dynamic Content Main Area */}
+        <main className="flex-1 overflow-y-auto p-4 sm:p-6 md:p-8 bg-slate-50">
           {activeTab === 'dashboard' && (
             <Dashboard onNavigateToTab={setActiveTab} />
           )}
@@ -43,6 +51,10 @@ export default function App() {
               currentPersona={currentPersona}
               onOpenLineageForMetric={() => setActiveTab('lineage')}
             />
+          )}
+
+          {activeTab === 'risk' && (
+            <SupplierRiskMatrix />
           )}
 
           {activeTab === 'consistency' && (
@@ -57,10 +69,6 @@ export default function App() {
             <MetricRegistryView
               onOpenLineageForMetric={() => setActiveTab('lineage')}
             />
-          )}
-
-          {activeTab === 'risk' && (
-            <SupplierRiskMatrix />
           )}
 
           {activeTab === 'lineage' && (

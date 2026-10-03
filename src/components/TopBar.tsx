@@ -2,13 +2,12 @@ import React from 'react';
 import { 
   ShieldCheck, 
   Sparkles, 
-  Clock, 
-  UserCircle2, 
-  Activity, 
   Layers, 
-  HelpCircle,
+  Menu,
+  Activity,
   Database
 } from 'lucide-react';
+import { ActiveTab } from './Sidebar';
 
 export type PersonaType = 'Planning' | 'Procurement' | 'Logistics';
 
@@ -17,65 +16,86 @@ interface TopBarProps {
   onSelectPersona: (persona: PersonaType) => void;
   onOpenDemoTour: () => void;
   onRunQuickConsistencyTest: () => void;
+  activeTab: ActiveTab;
+  onToggleMobileSidebar: () => void;
 }
+
+const TAB_TITLES: Record<ActiveTab, { title: string; category: string }> = {
+  dashboard: { title: 'Executive Dashboard', category: 'Overview' },
+  ask: { title: 'Ask SupplyGraph', category: 'Intelligence' },
+  risk: { title: 'Supplier Risk Analysis', category: 'Intelligence' },
+  consistency: { title: 'Metric Consistency Lab', category: 'Intelligence' },
+  ontology: { title: 'Ontology Explorer', category: 'Supply Chain Model' },
+  registry: { title: 'Canonical Metric Registry', category: 'Supply Chain Model' },
+  lineage: { title: 'Data Lineage & Traceability', category: 'Governance' },
+  audit: { title: 'Audit Trail & Compliance', category: 'Governance' },
+  tests: { title: 'Automated Test Runner', category: 'Governance' },
+};
 
 export const TopBar: React.FC<TopBarProps> = ({
   currentPersona,
   onSelectPersona,
   onOpenDemoTour,
-  onRunQuickConsistencyTest
+  onRunQuickConsistencyTest,
+  activeTab,
+  onToggleMobileSidebar
 }) => {
+  const currentTabInfo = TAB_TITLES[activeTab] || { title: 'Dashboard', category: 'Overview' };
+
   return (
-    <header className="h-16 bg-slate-900 border-b border-slate-800 px-6 flex items-center justify-between sticky top-0 z-30 select-none">
-      {/* Left: Brand & Semantic Governed Badge */}
-      <div className="flex items-center space-x-4">
-        <div className="flex items-center space-x-2">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-indigo-500 to-cyan-400 flex items-center justify-center shadow-lg shadow-indigo-500/25">
-            <Layers className="w-4 h-4 text-white" />
+    <header className="h-16 bg-white border-b border-slate-200 px-4 sm:px-6 flex items-center justify-between sticky top-0 z-30 select-none shadow-xs">
+      {/* Left: Mobile Toggle & Breadcrumbs */}
+      <div className="flex items-center space-x-3 sm:space-x-4">
+        <button
+          onClick={onToggleMobileSidebar}
+          className="lg:hidden p-2 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors"
+          aria-label="Toggle Navigation Menu"
+        >
+          <Menu className="w-5 h-5" />
+        </button>
+
+        <div>
+          <div className="flex items-center space-x-2 text-xs text-slate-500">
+            <span className="font-medium text-slate-500">{currentTabInfo.category}</span>
+            <span>/</span>
+            <span className="text-slate-800 font-semibold">{currentTabInfo.title}</span>
           </div>
-          <div>
-            <div className="flex items-center space-x-2">
-              <span className="font-bold text-white tracking-tight text-base">SupplyGraph AI</span>
-              <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center gap-1">
-                <ShieldCheck className="w-3 h-3" /> Governed Semantic Layer
-              </span>
-            </div>
-            <p className="text-[11px] text-slate-400">One governed source of truth across enterprise silos</p>
-          </div>
+          <h1 className="text-sm sm:text-base font-bold text-slate-900 leading-tight">
+            {currentTabInfo.title}
+          </h1>
         </div>
       </div>
 
-      {/* Middle: System Freshness & Database Mode */}
-      <div className="hidden xl:flex items-center space-x-6 text-xs text-slate-400">
-        <div className="flex items-center space-x-2 px-3 py-1.5 rounded-full bg-slate-800/80 border border-slate-700/60">
-          <Database className="w-3.5 h-3.5 text-indigo-400" />
-          <span>Active Warehouse: <strong className="text-slate-200">10,000 Shipments</strong></span>
-          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse ml-1" />
+      {/* Middle: System Data Badge (Hidden on mobile) */}
+      <div className="hidden xl:flex items-center space-x-3 text-xs">
+        <div className="flex items-center space-x-2 px-2.5 py-1 rounded-md bg-slate-100 border border-slate-200 text-slate-600">
+          <Database className="w-3.5 h-3.5 text-indigo-600" />
+          <span className="font-medium text-slate-700">10,000 Shipments</span>
+          <span className="text-slate-400">•</span>
+          <span className="text-slate-600">Q3 2026 Snapshot</span>
         </div>
-        <div className="flex items-center space-x-2">
-          <Clock className="w-3.5 h-3.5 text-slate-400" />
-          <span>Data Snapshot: <strong className="text-slate-300">Q3 2026 (Governed)</strong></span>
-        </div>
+        <span className="px-2 py-0.5 rounded text-[10px] font-bold tracking-wide uppercase bg-emerald-50 text-emerald-700 border border-emerald-200">
+          DEMO DATA
+        </span>
       </div>
 
-      {/* Right: Persona Switcher & Demo Tour */}
-      <div className="flex items-center space-x-3">
+      {/* Right: Persona Switcher & Actions */}
+      <div className="flex items-center space-x-2 sm:space-x-3">
         {/* Persona Selector */}
-        <div className="flex items-center bg-slate-800/90 rounded-lg p-1 border border-slate-700">
-          <div className="px-2 py-1 flex items-center text-xs text-slate-400 border-r border-slate-700/80 mr-1">
-            <UserCircle2 className="w-3.5 h-3.5 mr-1 text-slate-400" />
-            <span className="hidden sm:inline font-medium">Persona:</span>
-          </div>
+        <div className="flex items-center bg-slate-100 p-0.5 rounded-lg border border-slate-200">
+          <span className="hidden md:inline px-2 py-1 text-[11px] font-semibold text-slate-500">
+            Persona:
+          </span>
           {(['Planning', 'Procurement', 'Logistics'] as PersonaType[]).map((p) => {
             const isActive = currentPersona === p;
             return (
               <button
                 key={p}
                 onClick={() => onSelectPersona(p)}
-                className={`px-3 py-1 text-xs font-medium rounded-md transition-all ${
+                className={`px-2.5 py-1 text-xs rounded-md transition-all font-medium ${
                   isActive
-                    ? 'bg-indigo-600 text-white shadow-sm font-semibold'
-                    : 'text-slate-300 hover:text-white hover:bg-slate-700/60'
+                    ? 'bg-white text-indigo-700 shadow-xs border border-slate-200 font-semibold'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/60'
                 }`}
               >
                 {p}
@@ -87,20 +107,20 @@ export const TopBar: React.FC<TopBarProps> = ({
         {/* Consistency Check Shortcut */}
         <button
           onClick={onRunQuickConsistencyTest}
-          className="hidden md:flex items-center space-x-1.5 px-3 py-1.5 text-xs font-medium rounded-lg bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20 border border-emerald-500/30 transition-colors"
+          className="hidden md:flex items-center space-x-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200 transition-colors"
           title="Verify identical 93.2% OTD outcome across Planning, Procurement & Logistics"
         >
-          <Activity className="w-3.5 h-3.5 text-emerald-400" />
-          <span>Check Consistency</span>
+          <Activity className="w-3.5 h-3.5 text-emerald-600" />
+          <span>Consistency Lab</span>
         </button>
 
         {/* Demo Tour Guide Trigger */}
         <button
           onClick={onOpenDemoTour}
-          className="flex items-center space-x-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-md shadow-indigo-600/20 hover:brightness-110 transition-all"
+          className="flex items-center space-x-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white shadow-xs transition-colors"
         >
           <Sparkles className="w-3.5 h-3.5" />
-          <span>3-Min Demo Tour</span>
+          <span className="hidden sm:inline">Demo Guide</span>
         </button>
       </div>
     </header>

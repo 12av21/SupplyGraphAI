@@ -8,7 +8,10 @@ import {
   Code2,
   Table,
   Cpu,
-  ShieldCheck
+  ShieldCheck,
+  HelpCircle,
+  Calculator,
+  Search
 } from 'lucide-react';
 import { CANONICAL_METRICS, CanonicalMetric } from '../metrics/registry';
 
@@ -25,30 +28,39 @@ export const DataLineageView: React.FC = () => {
     AT_RISK_SUPPLIERS: '7 suppliers'
   };
 
+  const sampleQuestions: Record<string, string> = {
+    OTD: '“What is Supplier S001’s on-time delivery performance at Plant PL01?”',
+    FILL_RATE: '“Which suppliers have fill rate below 90%?”',
+    DAYS_OF_INVENTORY: '“How many days of inventory does Plant PL01 have?”',
+    LANDED_COST: '“What is the landed cost of Part P100?”',
+    LATE_SHIPMENTS: '“Show late shipments for last quarter.”',
+    AT_RISK_SUPPLIERS: '“Which suppliers are high risk and have poor OTD?”'
+  };
+
   return (
-    <div className="max-w-5xl mx-auto space-y-6 pb-16">
+    <div className="max-w-4xl mx-auto space-y-6 pb-16">
       {/* Header */}
-      <div className="bg-slate-900 border border-slate-800 rounded-xl p-5 shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+      <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-xs flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div>
           <div className="flex items-center space-x-2">
-            <span className="px-2.5 py-0.5 rounded text-[11px] font-semibold bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 flex items-center gap-1">
-              <GitFork className="w-3.5 h-3.5" /> End-to-End Traceability
+            <span className="px-2.5 py-0.5 rounded text-[11px] font-semibold bg-indigo-50 text-indigo-700 border border-indigo-200 flex items-center gap-1">
+              <GitFork className="w-3.5 h-3.5 text-indigo-600" /> End-to-End Governance Trace
             </span>
-            <span className="text-xs text-slate-400">Deterministic Lineage Graph</span>
+            <span className="text-xs text-slate-500">Traceability & Explainability</span>
           </div>
-          <h1 className="text-xl font-bold text-white mt-1">Data & Metric Lineage Graph</h1>
-          <p className="text-sm text-slate-400 mt-0.5">
-            Trace calculation logic backwards from final dashboard KPI to semantic concepts, ontology entities, and raw relational tables.
+          <h1 className="text-xl font-bold text-slate-900 mt-1">Data & Metric Lineage Graph</h1>
+          <p className="text-sm text-slate-600 mt-0.5">
+            Trace calculation logic backwards from natural language question down through ontology concepts, canonical metrics, source tables, and validated execution.
           </p>
         </div>
 
-        {/* Metric Switcher */}
+        {/* Metric Selector */}
         <div className="flex items-center space-x-2">
-          <span className="text-xs text-slate-400">Select Metric:</span>
+          <span className="text-xs text-slate-500 font-medium">Trace Metric:</span>
           <select
             value={selectedMetricKey}
             onChange={(e) => setSelectedMetricKey(e.target.value)}
-            className="bg-slate-800 border border-slate-700 rounded-lg px-3 py-1.5 text-xs font-semibold text-white focus:outline-none focus:border-indigo-500"
+            className="bg-white border border-slate-300 rounded-lg px-3 py-1.5 text-xs font-semibold text-slate-800 focus:outline-none focus:border-indigo-600 shadow-xs"
           >
             {Object.keys(CANONICAL_METRICS).map((key) => (
               <option key={key} value={key}>
@@ -59,156 +71,168 @@ export const DataLineageView: React.FC = () => {
         </div>
       </div>
 
-      {/* Visual Vertical Lineage Flow (Section 10 Verbatim) */}
-      <div className="space-y-4">
-        {/* Node 1: Canonical Metric */}
-        <div className="p-5 rounded-xl bg-slate-900 border border-slate-800 relative">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <div className="w-9 h-9 rounded-lg bg-indigo-500/15 text-indigo-400 flex items-center justify-center font-bold text-sm">
-                1
-              </div>
-              <div>
-                <div className="text-[10px] font-bold text-indigo-400 uppercase tracking-wider">LEVEL 1: CANONICAL METRIC</div>
-                <h3 className="text-base font-bold text-white mt-0.5">{metric.name} ({metric.short_code})</h3>
+      {/* 8-Tier Visual Lineage Flow (Section 11 Exact Requirement) */}
+      <div className="space-y-3">
+        {/* Tier 1: Business Question */}
+        <div className="p-4 rounded-xl bg-white border border-slate-200 shadow-xs flex items-center space-x-3.5">
+          <div className="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-700 border border-indigo-200 flex items-center justify-center font-bold text-xs flex-shrink-0">
+            1
+          </div>
+          <div className="flex-1">
+            <div className="text-[10px] font-bold text-indigo-700 uppercase tracking-wider">Business Question</div>
+            <div className="text-sm font-semibold text-slate-900 mt-0.5">{sampleQuestions[selectedMetricKey]}</div>
+          </div>
+          <span className="px-2 py-0.5 rounded bg-slate-100 text-slate-600 text-[10px] font-medium border border-slate-200">
+            Natural Input
+          </span>
+        </div>
+
+        <div className="flex justify-center text-slate-400">
+          <ArrowDown className="w-4 h-4" />
+        </div>
+
+        {/* Tier 2: Intent */}
+        <div className="p-4 rounded-xl bg-white border border-slate-200 shadow-xs flex items-center space-x-3.5">
+          <div className="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-700 border border-indigo-200 flex items-center justify-center font-bold text-xs flex-shrink-0">
+            2
+          </div>
+          <div className="flex-1">
+            <div className="text-[10px] font-bold text-indigo-700 uppercase tracking-wider">Intent Resolution</div>
+            <div className="text-xs font-semibold text-slate-900 mt-0.5">
+              Mapped Intent: <span className="font-mono text-indigo-700 font-bold">{selectedMetricKey}_ANALYSIS</span> (Constraint Filter Extraction)
+            </div>
+          </div>
+          <span className="px-2 py-0.5 rounded bg-slate-100 text-slate-600 text-[10px] font-medium border border-slate-200">
+            Parsed AST
+          </span>
+        </div>
+
+        <div className="flex justify-center text-slate-400">
+          <ArrowDown className="w-4 h-4" />
+        </div>
+
+        {/* Tier 3: Ontology Concept */}
+        <div className="p-4 rounded-xl bg-white border border-slate-200 shadow-xs flex items-center space-x-3.5">
+          <div className="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-700 border border-indigo-200 flex items-center justify-center font-bold text-xs flex-shrink-0">
+            3
+          </div>
+          <div className="flex-1">
+            <div className="text-[10px] font-bold text-indigo-700 uppercase tracking-wider">Ontology Concept</div>
+            <div className="text-xs font-semibold text-slate-900 mt-0.5">
+              Linked Schema Entities: <span className="font-semibold text-slate-800">{metric.source_entities.join(' ⟷ ')}</span>
+            </div>
+          </div>
+          <span className="px-2 py-0.5 rounded bg-slate-100 text-slate-600 text-[10px] font-medium border border-slate-200">
+            9 Entities Catalog
+          </span>
+        </div>
+
+        <div className="flex justify-center text-slate-400">
+          <ArrowDown className="w-4 h-4" />
+        </div>
+
+        {/* Tier 4: Canonical Metric */}
+        <div className="p-4 rounded-xl bg-white border border-slate-200 shadow-xs flex items-center space-x-3.5">
+          <div className="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-700 border border-indigo-200 flex items-center justify-center font-bold text-xs flex-shrink-0">
+            4
+          </div>
+          <div className="flex-1">
+            <div className="text-[10px] font-bold text-indigo-700 uppercase tracking-wider">Canonical Metric</div>
+            <div className="text-xs font-semibold text-slate-900 mt-0.5">
+              {metric.name} (<span className="font-mono text-indigo-700 font-bold">{metric.metric_id}</span>) — {metric.formula}
+            </div>
+            <div className="text-[11px] text-slate-500 mt-0.5">{metric.description}</div>
+          </div>
+          <span className="px-2 py-0.5 rounded bg-emerald-50 text-emerald-700 text-[10px] font-semibold border border-emerald-200">
+            Approved v{metric.version}
+          </span>
+        </div>
+
+        <div className="flex justify-center text-slate-400">
+          <ArrowDown className="w-4 h-4" />
+        </div>
+
+        {/* Tier 5: Semantic View */}
+        <div className="p-4 rounded-xl bg-white border border-slate-200 shadow-xs flex items-center space-x-3.5">
+          <div className="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-700 border border-indigo-200 flex items-center justify-center font-bold text-xs flex-shrink-0">
+            5
+          </div>
+          <div className="flex-1">
+            <div className="text-[10px] font-bold text-indigo-700 uppercase tracking-wider">Semantic View Abstraction</div>
+            <div className="text-xs font-mono text-slate-800 mt-0.5">
+              v_governed_{metric.short_code.toLowerCase().replace(/[^a-z0-9]/g, '_')} (Business Semantic Layer)
+            </div>
+          </div>
+          <span className="px-2 py-0.5 rounded bg-slate-100 text-slate-600 text-[10px] font-medium border border-slate-200">
+            SQL View
+          </span>
+        </div>
+
+        <div className="flex justify-center text-slate-400">
+          <ArrowDown className="w-4 h-4" />
+        </div>
+
+        {/* Tier 6: Source Entity & Tables */}
+        <div className="p-4 rounded-xl bg-white border border-slate-200 shadow-xs flex items-center space-x-3.5">
+          <div className="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-700 border border-indigo-200 flex items-center justify-center font-bold text-xs flex-shrink-0">
+            6
+          </div>
+          <div className="flex-1">
+            <div className="text-[10px] font-bold text-indigo-700 uppercase tracking-wider">Source Entity & Physical Tables</div>
+            <div className="text-xs font-mono text-indigo-700 font-semibold mt-0.5">
+              {metric.source_tables.join(', ')}
+            </div>
+          </div>
+          <span className="px-2 py-0.5 rounded bg-slate-100 text-slate-600 text-[10px] font-medium border border-slate-200">
+            Relational DDL
+          </span>
+        </div>
+
+        <div className="flex justify-center text-slate-400">
+          <ArrowDown className="w-4 h-4" />
+        </div>
+
+        {/* Tier 7: Calculation */}
+        <div className="p-4 rounded-xl bg-white border border-slate-200 shadow-xs space-y-2">
+          <div className="flex items-center space-x-3.5">
+            <div className="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-700 border border-indigo-200 flex items-center justify-center font-bold text-xs flex-shrink-0">
+              7
+            </div>
+            <div className="flex-1">
+              <div className="text-[10px] font-bold text-indigo-700 uppercase tracking-wider">Calculation Engine</div>
+              <div className="text-xs font-semibold text-slate-900 mt-0.5">
+                Formula Evaluation: <code className="text-indigo-700 font-mono">{metric.formula}</code>
               </div>
             </div>
-            <span className="px-2.5 py-1 rounded bg-slate-800 font-mono text-xs text-slate-300 border border-slate-700">
-              {metric.metric_id}
+            <span className="px-2 py-0.5 rounded bg-slate-100 text-slate-600 text-[10px] font-medium border border-slate-200">
+              Validated Execution
             </span>
           </div>
-          <p className="text-xs text-slate-300 mt-3 leading-relaxed">{metric.description}</p>
-        </div>
-
-        <div className="flex justify-center text-slate-500">
-          <ArrowDown className="w-5 h-5 animate-bounce" />
-        </div>
-
-        {/* Node 2: Semantic Definition */}
-        <div className="p-5 rounded-xl bg-slate-900 border border-slate-800 relative">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <div className="w-9 h-9 rounded-lg bg-cyan-500/15 text-cyan-400 flex items-center justify-center font-bold text-sm">
-                2
-              </div>
-              <div>
-                <div className="text-[10px] font-bold text-cyan-400 uppercase tracking-wider">LEVEL 2: SEMANTIC DEFINITION</div>
-                <h3 className="text-base font-bold text-white mt-0.5">Governed Business Rule & SLA</h3>
-              </div>
-            </div>
-            <span className="px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-400 text-xs font-semibold">
-              {metric.status} v{metric.version}
-            </span>
-          </div>
-          <p className="text-xs text-slate-300 mt-3 p-3 rounded-lg bg-slate-800/40 border border-slate-800 leading-relaxed font-medium">
-            "{metric.business_definition}"
-          </p>
-        </div>
-
-        <div className="flex justify-center text-slate-500">
-          <ArrowDown className="w-5 h-5" />
-        </div>
-
-        {/* Node 3: Ontology Entities */}
-        <div className="p-5 rounded-xl bg-slate-900 border border-slate-800 relative">
-          <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center space-x-3">
-              <div className="w-9 h-9 rounded-lg bg-purple-500/15 text-purple-400 flex items-center justify-center font-bold text-sm">
-                3
-              </div>
-              <div>
-                <div className="text-[10px] font-bold text-purple-400 uppercase tracking-wider">LEVEL 3: ONTOLOGY ENTITIES</div>
-                <h3 className="text-base font-bold text-white mt-0.5">Participating Business Objects</h3>
-              </div>
-            </div>
-            <span className="text-xs text-slate-400 font-mono">{metric.source_entities.length} Linked Objects</span>
-          </div>
-
-          <div className="flex flex-wrap gap-2 mt-2">
-            {metric.source_entities.map((ent) => (
-              <span key={ent} className="px-3 py-1.5 rounded-lg bg-slate-800 text-slate-200 border border-slate-700 text-xs font-semibold flex items-center space-x-1.5">
-                <Layers className="w-3.5 h-3.5 text-purple-400" />
-                <span>{ent}</span>
-              </span>
-            ))}
-          </div>
-        </div>
-
-        <div className="flex justify-center text-slate-500">
-          <ArrowDown className="w-5 h-5" />
-        </div>
-
-        {/* Node 4: Source Tables */}
-        <div className="p-5 rounded-xl bg-slate-900 border border-slate-800 relative">
-          <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center space-x-3">
-              <div className="w-9 h-9 rounded-lg bg-amber-500/15 text-amber-400 flex items-center justify-center font-bold text-sm">
-                4
-              </div>
-              <div>
-                <div className="text-[10px] font-bold text-amber-400 uppercase tracking-wider">LEVEL 4: PHYSICAL STORAGE</div>
-                <h3 className="text-base font-bold text-white mt-0.5">Relational Tables & Foreign Keys</h3>
-              </div>
-            </div>
-            <span className="text-xs text-slate-400 font-mono">SQLite / SQL DDL</span>
-          </div>
-
-          <div className="flex flex-wrap gap-2">
-            {metric.source_tables.map((tbl) => (
-              <span key={tbl} className="px-3 py-1.5 rounded-lg bg-slate-950 font-mono text-amber-300 border border-slate-800 text-xs flex items-center space-x-1.5">
-                <Table className="w-3.5 h-3.5 text-amber-400" />
-                <span>{tbl}</span>
-              </span>
-            ))}
-          </div>
-        </div>
-
-        <div className="flex justify-center text-slate-500">
-          <ArrowDown className="w-5 h-5" />
-        </div>
-
-        {/* Node 5: Calculation Expression */}
-        <div className="p-5 rounded-xl bg-slate-900 border border-slate-800 relative">
-          <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center space-x-3">
-              <div className="w-9 h-9 rounded-lg bg-blue-500/15 text-blue-400 flex items-center justify-center font-bold text-sm">
-                5
-              </div>
-              <div>
-                <div className="text-[10px] font-bold text-blue-400 uppercase tracking-wider">LEVEL 5: MATHEMATICAL ENGINE</div>
-                <h3 className="text-base font-bold text-white mt-0.5">Formula Evaluation & SQL Aggregation</h3>
-              </div>
-            </div>
-            <span className="text-xs font-mono text-indigo-400">Formula: {metric.formula}</span>
-          </div>
-
-          <pre className="p-3 bg-slate-950 rounded-lg border border-slate-800 font-mono text-emerald-400 text-xs overflow-x-auto whitespace-pre-wrap">
+          <pre className="p-2.5 bg-slate-900 text-emerald-300 font-mono text-[11px] rounded-lg overflow-x-auto whitespace-pre-wrap">
             {metric.sql_expression}
           </pre>
         </div>
 
-        <div className="flex justify-center text-slate-500">
-          <ArrowDown className="w-5 h-5" />
+        <div className="flex justify-center text-slate-400">
+          <ArrowDown className="w-4 h-4" />
         </div>
 
-        {/* Node 6: Governed Result */}
-        <div className="p-6 rounded-xl bg-gradient-to-r from-emerald-950/40 via-slate-900 to-indigo-950/40 border border-emerald-500/40 shadow-lg">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <div className="flex items-center space-x-3">
-              <div className="w-9 h-9 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-sm">
-                6
-              </div>
-              <div>
-                <div className="text-[10px] font-bold text-emerald-400 uppercase tracking-wider">LEVEL 6: GOVERNED TRUTH OUTCOME</div>
-                <h3 className="text-base font-bold text-white mt-0.5">Deterministic Database Value</h3>
-              </div>
+        {/* Tier 8: Answer Result */}
+        <div className="p-5 rounded-xl bg-emerald-50/80 border border-emerald-200 shadow-xs flex items-center justify-between">
+          <div className="flex items-center space-x-3.5">
+            <div className="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-800 border border-emerald-300 flex items-center justify-center font-bold text-xs flex-shrink-0">
+              8
             </div>
-            <div className="text-left sm:text-right">
-              <div className="text-xs text-slate-400">Verified Output</div>
-              <div className="text-3xl font-black text-white font-mono mt-0.5">
-                {metricResults[selectedMetricKey] || '93.2%'}
-              </div>
+            <div>
+              <div className="text-[10px] font-bold text-emerald-800 uppercase tracking-wider">Governed Truth Answer</div>
+              <div className="text-xs text-slate-600 mt-0.5">Exact database output verified across all enterprise personas</div>
             </div>
+          </div>
+          <div className="text-right">
+            <div className="text-2xl font-black text-slate-900 font-mono">
+              {metricResults[selectedMetricKey] || '93.2%'}
+            </div>
+            <div className="text-[10px] font-semibold text-emerald-700">100% Deterministic</div>
           </div>
         </div>
       </div>
