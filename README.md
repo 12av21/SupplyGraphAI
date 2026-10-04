@@ -1,212 +1,228 @@
-# SupplyGraph AI — Governed Conversational Supply Chain Analytics
+# SCIP — Smart Community Intelligence Platform
 
-> **“One governed source of truth for supply-chain decisions.”**
-
-SupplyGraph AI is an enterprise-grade supply-chain analytics platform demonstrating how a **Supply Chain Ontology + Governed Semantic Layer + Conversational Analytics** eliminates cross-functional metric drift across Planning, Procurement, and Logistics.
-
----
-
-## 📌 Problem Statement
-
-Supply chain telemetry is traditionally fragmented across disconnected systems: ERP for purchasing, MES for plant production, TMS for freight shipments, WMS for inventory counts, and IoT telematics devices.
-
-Because different teams define and query metrics differently, organizational friction occurs:
-- **Planning** measures fulfillment against production line buffer targets.
-- **Procurement** measures vendor reliability against contractual promise dates.
-- **Logistics** measures carrier on-time transit against carrier dispatch schedules.
-
-This fragmentation causes conflicting answers for the exact same underlying business questions. SupplyGraph AI bridges this divide with an immutable **Supply Chain Ontology** and a **Governed Semantic Layer**, ensuring that the same question asked by different personas always produces the **same verified canonical answer**.
+> **An AI-Assisted Municipal Community Intelligence & Decision Support Platform**  
+> *Transforming citizen ground observations into structured municipal intelligence with Responsible AI governance.*
 
 ---
 
-## 🏗 System Architecture
+## 📌 1. Project Vision & Responsible AI Charter
 
-SupplyGraph AI executes queries through a strict, multi-stage governance pipeline. The LLM is strictly prohibited from inventing formulas or generating unverified SQL:
+**SCIP is NOT simply a complaint-ticketing or grievance redressal system.**
+
+In traditional municipal portals, citizen complaints remain isolated tickets. A dozen citizens reporting flooded streets, overflowing culverts, stalled vehicles, and blocked intersections are handled as twelve disjoint tickets, frequently sent to different departments with duplicate effort and delayed emergency response.
+
+SCIP bridges this divide by transforming individual citizen observations into **structured municipal intelligence**:
 
 ```
-                            [ USER QUESTION ]
-     ("What is Supplier S001's on-time delivery rate at Plant PL01?")
-                                   │
-                                   ▼
-                    [ INTENT & VOCABULARY RESOLVER ]
-         (Maps natural language into structured semantic AST)
-                                   │
-                                   ▼
-                      [ ONTOLOGY KNOWLEDGE GRAPH ]
-              (Entities: Supplier, Part, Plant, Shipment, etc.)
-                                   │
-                                   ▼
-                     [ CANONICAL METRIC REGISTRY ]
-               (Lookup: METRIC_SC_001 "On-Time Delivery")
-                                   │
-                                   ▼
-                    [ GOVERNED COMPILATION & AST ]
-                                   │
-                ┌──────────────────┴──────────────────┐
-                │                                     │
-                ▼                                     ▼
-       [ METRIC VALIDATION ]                 [ SAFETY & READ-ONLY CHECK ]
- (Verify formula, owner, version)       (Rejects DDL/DML, drops, inserts)
-                │                                     │
-                └──────────────────┬──────────────────┘
-                                   │
-                                   ▼
-                     [ PARAMETERIZED SQL GENERATION ]
-                                   │
-                                   ▼
-                   [ GOVERNED SQL DATABASE ENGINE ]
-             (10,000 shipments, 25 suppliers, 10 plants)
-                                   │
-                                   ▼
-                    [ TRUST & EXPLAINABILITY ENGINE ]
-         (Answer + Metric + Formula + Filters + Data Lineage)
-                                   │
-                                   ▼
-              [ 93.2% OTD RESULT - 100% CROSS-PERSONA PARITY ]
+Community Report (Observation)
+       ↓
+Data Preprocessing (Tokenization, Stopwords, Stemming)
+       ↓
+AI/ML Analysis (TF-IDF Vector Space, Category Centroids)
+       ↓
+Relationship & Duplicate Detection (Cosine Similarity, Haversine Distance)
+       ↓
+Spatio-Temporal Incident Clustering (DBSCAN 500m / 48h Window)
+       ↓
+Explainable Multi-Factor Risk & Priority Scoring (P1-P4)
+       ↓
+Decision Support & Evidence Retrieval
+       ↓
+HUMAN-IN-THE-LOOP REVIEW (Authority Officer Confirmation / Dismissal)
+       ↓
+Departmental Operational Dispatch & Remediation
 ```
 
----
+### 🛡️ The Inviolable Responsible AI Principle
 
-## 🌐 Supply Chain Ontology
-
-The ontology is modeled as active application metadata governing relational join paths and dimensional grains:
-
-- **Supplier** (`supplier_id`, `supplier_name`, `region`, `supplier_tier`, `risk_level`)
-- **Part** (`part_id`, `part_name`, `category`, `unit_cost`)
-- **Plant** (`plant_id`, `plant_name`, `location`, `capacity`)
-- **Customer** (`customer_id`, `customer_name`, `region`)
-- **Order** (`order_id`, `customer_id`, `part_id`, `quantity`, `order_date`, `requested_date`)
-- **Shipment** (`shipment_id`, `order_id`, `supplier_id`, `plant_id`, `carrier_id`, `promised_date`, `ship_date`, `actual_delivery_date`, `quantity_ordered`, `quantity_delivered`, `freight_cost`, `duty_cost`, `handling_cost`)
-- **Inventory** (`inventory_id`, `plant_id`, `part_id`, `inventory_quantity`, `inventory_value`, `snapshot_date`)
-- **Carrier** (`carrier_id`, `carrier_name`, `transport_mode`)
-- **IoTEvent** (`event_id`, `plant_id`, `shipment_id`, `event_type`, `event_timestamp`, `severity`)
-
-### Governed Relationship Edges
-1. `Supplier` → *supplies* → `Part`
-2. `Part` → *supplied_to / used_at* → `Plant`
-3. `Customer` → *places* → `Order`
-4. `Order` → *contains* → `Part`
-5. `Order` → *fulfilled_by* → `Shipment`
-6. `Shipment` → *originates_from* → `Supplier`
-7. `Shipment` → *delivered_to* → `Plant`
-8. `Shipment` → *transported_by* → `Carrier`
-9. `Plant` → *holds* → `Inventory`
-10. `Shipment` → *generates* → `IoTEvent`
+1. **A community report is an observation:** Citizens report sensory observations (e.g. *"Water accumulation near market entrance"*).
+2. **An AI-generated incident is an analytical interpretation:** Machine learning algorithms correlate proximate observations and hypothesize potential underlying infrastructure failures (e.g. *"Potential Incident: Concentrated Drainage Failure at Sector 4"*).
+3. **An AI recommendation is NOT a final administrative decision:** Municipal authority officers must review evidence, corroborate physical ground reality, and formally confirm or dismiss incidents before municipal work orders are executed.
 
 ---
 
-## 📊 Canonical Metric Registry
+## 🏗️ 2. Technology Stack
 
-Every metric is governed by an immutable catalog entry with explicit SLA ownership:
-
-| Metric ID | Short Code | Metric Name | Canonical Formula | Unit | Owner | Version | Status |
-|---|---|---|---|---|---|---|---|
-| `METRIC_SC_001` | **OTD** | On-Time Delivery | `on_time_shipments / eligible_shipments` | `%` | Logistics COE | 1.0 | Approved |
-| `METRIC_SC_002` | **Fill Rate** | Order Fill Rate | `quantity_delivered / quantity_ordered` | `%` | Order Operations | 1.0 | Approved |
-| `METRIC_SC_003` | **Days Inventory** | Days of Inventory (DOI) | `current_inventory / average_daily_demand` | `days` | Integrated Planning | 1.0 | Approved |
-| `METRIC_SC_004` | **Landed Cost** | Total Landed Cost | `purchase + freight + duty + insurance + handling` | `USD` | Strategic Procurement | 1.2 | Approved |
-| `METRIC_SC_005` | **Late Shipments** | Late Shipments Count | `COUNT(actual_delivery > promised)` | `count` | Logistics Operations | 1.0 | Approved |
-| `METRIC_SC_006` | **At-Risk Suppliers** | At-Risk Supplier Count | `COUNT(risk = High OR OTD < 90%)` | `count` | Supplier Risk | 1.0 | Approved |
-
----
-
-## 🎯 Cross-Persona Consistency Lab
-
-The core demonstration feature proves that three distinct business personas asking different questions resolve to the exact same canonical definition and compute the identical mathematical result:
-
-- **Planning**: *“What is Supplier S001's on-time delivery performance at Plant PL01?”*
-- **Procurement**: *“How reliable was Supplier S001 for Plant PL01?”*
-- **Logistics**: *“What percentage of Supplier S001 shipments reached Plant PL01 on time?”*
-
-### Resolution Parity
-- **Ontology Concept**: `Shipment.is_on_time`
-- **Canonical Metric**: `METRIC_SC_001` (On-Time Delivery)
-- **Formula**: `on_time_shipments / eligible_shipments`
-- **Source Tables**: `shipments`, `suppliers`, `plants`
-- **Computed Result**: **93.2%**
+- **Frontend:** React 19, TypeScript, Vite 8, Tailwind CSS v4, Lucide Icons
+- **Backend:** Node.js, Express.js 4, TypeScript (`tsx` runtime engine)
+- **Database Architecture:** MongoDB & Mongoose-compatible schema engine with transactional indexing, audit logging hooks, and seed persistence
+- **AI/ML Pipeline:**
+  - NLP Text Preprocessing (Tokenization, domain stopwords pruning, Porter-style stemming, n-grams)
+  - TF-IDF Vectorizer (L2-normalized feature representation)
+  - Cosine Similarity & Vector Matching Engine
+  - Haversine Geospatial Formula (Great-Circle Distance in meters)
+  - Spatio-Temporal DBSCAN Clustering ($Eps_{\text{spatial}} = 550\text{m}$, $Eps_{\text{temporal}} = 48\text{h}$, $\text{Sim}_{\text{semantic}} \ge 0.35$)
+  - Multi-Factor Explainable Risk Scoring Engine (Hazard, Density, Infrastructure impact, Escalation velocity, Historical recurrence)
+  - SCIP Intelligence Agent orchestrating 10 specialized intelligence tools
+- **Security & RBAC:**
+  - Password hashing via `bcryptjs`
+  - JWT tokens with role claims
+  - Granular permissions enforcement (`report.create`, `incident.resolve`, `audit.read`, etc.)
+  - Security headers (X-Content-Type-Options, X-Frame-Options, X-XSS-Protection)
+  - Immutable Audit Logging tracking action, module, user, timestamp, and IP address
 
 ---
 
-## 🔍 Why-Analysis & Root Cause Diagnostics
+## 🤖 3. SCIP Multi-Tool Intelligence Agent
 
-When users ask *“Why did OTD fall at PL01?”*, the system decomposes contributing factors from relational joins and distinguishes calculated database evidence from AI narrative:
+The SCIP Intelligence Agent orchestrates 10 specialized tools:
 
-- **Supplier S001 (Apex MicroElectronics)**: 38 late consignments
-- **Carrier CAR04 (Union Pacific Intermodal Rail)**: 21 late consignments
-- **Part SKU-P100 (Microcontroller MCU-64 Core)**: 17 late consignments
-
----
-
-## 🛡 AI Safety & Query Governance
-
-- **Zero Hallucinated Metrics**: Inquiries for unapproved concepts (e.g. *“What is supplier happiness?”*) are rejected at the governance boundary with suggestions for canonical metrics.
-- **Strict Read-Only SQL**: Any DDL/DML write statements (`INSERT`, `UPDATE`, `DELETE`, `DROP`, `ALTER`, `TRUNCATE`) are blocked immediately.
-- **Audit Console**: Complete immutable query logging tracking execution latency, AST representation, and verification traces.
-
----
-
-## 🧪 Synthetic Data Notice
-
-To guarantee deterministic, reproducible evaluations without external network dependencies, the current prototype uses a seeded in-memory SQL database with **10,000 shipments**, **25 suppliers**, **100 parts**, **10 manufacturing plants**, and **5 carriers**. This seed data is structured with calibrated real-world anomalies (high-risk vendors, carrier rail delays, plant buffer constraints) to make analytics meaningful.
-
-*Note: This prototype does not connect to live production ERP/TMS systems.*
+1. **Classification Tool:** Supervised centroid classifier for 8 municipal categories.
+2. **Entity Extraction Tool:** Extracts locations, infrastructure components, hazards, and temporal patterns.
+3. **Similarity Tool:** Vector cosine similarity lookup across corpus.
+4. **Duplicate Detection Tool:** Multi-factor duplicate probability combining text similarity, geographic distance, and time delta.
+5. **Geospatial Analysis Tool:** Bounding box density and radius analysis.
+6. **Incident Clustering Tool:** DBSCAN spatio-temporal clustering engine.
+7. **Trend Analysis Tool:** Category distributions, daily intake volumes, and recurring hotspot detection.
+8. **Risk Analysis Tool:** Multi-factor transparent risk breakdown.
+9. **Evidence Retrieval Tool:** Retrieves raw citizen observations corroborating an incident.
+10. **Intelligence Report Tool:** Synthesizes structured decision briefings with explicit uncertainty declarations.
 
 ---
 
-## 🚀 Local Development
+## 👥 4. Pre-Configured Test Accounts (Roles & Permissions)
 
+The platform comes pre-seeded with authenticated accounts representing every level of the municipal governance hierarchy:
+
+| Role | Name | Email | Password | Access Capabilities |
+|---|---|---|---|---|
+| **Admin** | Adarsh Verma | `admin@scip.gov` | `AdminPass123!` | Full system administration, RBAC, audit logs, diagnostics |
+| **Authority** | Dr. Rajesh Gupta | `director@scip.gov` | `DirectorPass123!` | Human review confirmation/dismissal, departmental dispatch |
+| **Officer** | Vikram Sharma | `officer.sharma@scip.gov` | `OfficerPass123!` | Field investigation, incident resolution, assignment tracking |
+| **Officer** | Sunita Patel | `officer.patel@scip.gov` | `OfficerPass123!` | Water & Sewerage field supervision |
+| **Citizen** | Priya Sharma | `citizen.jane@scip.gov` | `CitizenPass123!` | Observation submission, report tracking, feedback submission |
+
+*Note: You can instantly switch between test roles using the top navigation bar's **"Role:"** dropdown menu.*
+
+---
+
+## 🚀 5. Getting Started & Development Commands
+
+### Prerequisites
+- Node.js $\ge 20$
+- npm or bun
+
+### 1. Installation
 ```bash
-# 1. Clone repository
-git clone https://github.com/12av21/SupplyGraphAI.git
-cd SupplyGraphAI
-
-# 2. Install dependencies
+git clone https://github.com/12av21/SCIP_MASTER.git
+cd SCIP_MASTER
 npm install
+```
 
-# 3. Run type check / linting
-npm run lint
+### 2. Environment Configuration
+Copy `.env.example` to `.env`:
+```bash
+cp .env.example .env
+```
+Default parameters are pre-configured:
+```env
+PORT=3000
+NODE_ENV=development
+JWT_SECRET=scip-master-secure-jwt-secret-key-2026
+MONGODB_URI=mongodb://127.0.0.1:27017/scip
+```
 
-# 4. Build application
-npm run build
-
-# 5. Start development server (port 3000)
+### 3. Start Development Server
+```bash
+# Starts full-stack Express server with integrated Vite middleware on port 3000:
 npm run dev
 ```
+Open your browser at: `http://localhost:3000`
+
+### 4. Build for Production
+```bash
+# Validates TypeScript types and produces optimized production client bundle:
+npm run build
+```
+
+### 5. Typecheck & Linting
+```bash
+npm run typecheck
+```
 
 ---
 
-## 🌐 GitHub Pages Deployment
+## 🌐 6. REST API Reference
 
-The repository includes an automated GitHub Actions deployment workflow:
-`.github/workflows/deploy-pages.yml`
+All backend endpoints are mounted under `/api/*` and return consistent JSON structures:
 
-### Configuration
-In `vite.config.ts`, the base path dynamically detects GitHub Actions:
-```ts
-base: process.env.GITHUB_ACTIONS === 'true' ? '/SupplyGraphAI/' : '/'
+```json
+{
+  "success": true,
+  "message": "...",
+  "data": {},
+  "meta": {}
+}
 ```
 
-### Expected Deployment URL
-```
-https://12av21.github.io/SupplyGraphAI/
-```
-*(The URL is active once the GitHub Actions deployment workflow executes successfully on the repository).*
+### Authentication (`/api/auth`)
+- `POST /api/auth/register` — Register citizen or officer account
+- `POST /api/auth/login` — Authenticate and receive JWT bearer token
+- `POST /api/auth/demo-login` — Switch active role for development evaluation
+- `GET /api/auth/me` — Retrieve active authenticated user profile
+- `POST /api/auth/logout` — Revoke session and log audit event
+
+### Reports (`/api/reports`)
+- `GET /api/reports` — List reports with category, status, urgency, or citizen filters
+- `POST /api/reports` — Submit new observation with automated AI analysis pipeline
+- `GET /api/reports/:id` — Retrieve report details and stored AI analysis
+- `PUT /api/reports/:id` — Update report
+- `POST /api/reports/:id/reanalyze` — Re-execute NLP classification and similarity pipeline
+
+### Incidents (`/api/incidents`)
+- `GET /api/incidents` — List municipal incidents (potential, confirmed, in-progress, resolved)
+- `GET /api/incidents/:id` — Retrieve incident dossier and all linked citizen reports
+- `POST /api/incidents/from-cluster` — Convert AI spatio-temporal cluster into incident proposal
+- `POST /api/incidents/:id/review` — **Human Review Boundary:** Confirm or dismiss incident with accountability notes
+- `POST /api/incidents/:id/resolve` — Submit field resolution, equipment used, and cost estimate
+
+### Intelligence & Analytics (`/api/intelligence`)
+- `POST /api/intelligence/agent` — Execute multi-tool SCIP Intelligence Agent query
+- `GET /api/intelligence/clusters` — Execute Spatio-Temporal DBSCAN clustering
+- `GET /api/intelligence/hotspots` — Calculate geospatial density hotspots
+- `GET /api/intelligence/trends` — Return longitudinal volume and category trends
+
+### Governance & Administration (`/api/admin`)
+- `GET /api/admin/users` — List platform users
+- `PUT /api/admin/users/:id/role` — Update user role (Admin only)
+- `GET /api/admin/departments` — List municipal departments and active work orders
+- `GET /api/admin/audit-logs` — Query immutable audit trail with module and action filters
+- `GET /api/admin/system-stats` — Runtime memory, uptime, and engine diagnostics
+
+### System Verification (`/api/health`, `/api/tests`)
+- `GET /api/health` — Platform health check
+- `POST /api/tests/run` — Run automated 22-point technical audit suite
 
 ---
 
-## ⏱ 3–5 Minute Presentation Walkthrough
+## 🧪 7. Automated 22-Point Verification Suite
 
-Use the **"Demo Guide"** modal in the top navigation bar to execute the 8-step presentation sequence:
+To verify all requirements, click **"Audit Tests"** in the top navigation bar or navigate to `/tests`. The test suite automatically validates:
 
-1. **Executive Dashboard**: Review OTD (93.2%), Fill Rate (96.4%), DOI (18.7), and Landed Cost ($12.4M).
-2. **Ontology Explorer**: Inspect the 9 entities, 10 edges, and instance data for Supplier S001.
-3. **Metric Registry**: Review the approved definition and formula components for OTD.
-4. **Ask SupplyGraph**: Run *“Which suppliers caused the most late deliveries to PL01?”*. Show answer card, lineage AST, and safe read-only SQL.
-5. **Procurement Persona**: Ask *“How reliable was Supplier S001 for Plant PL01?”*. Show mapping to canonical OTD.
-6. **Consistency Lab**: Demonstrate side-by-side parity across Planning, Procurement, and Logistics (all 93.2%).
-7. **Why Did OTD Fall?**: Decompose root-cause factors (S001, CAR04, P100).
-8. **Data Lineage**: Trace the 8-tier vertical path from natural question to the 93.2% result.
+1. `API Server Health Check`
+2. `Database Records & Seed Integrity`
+3. `User Authentication & Role Verification`
+4. `Password Security Hashing (bcrypt)`
+5. `Backend RBAC Permissions Matrix`
+6. `NLP Tokenization, Stopwords & Stemming`
+7. `TF-IDF Vector Space Generation`
+8. `Cosine Vector Similarity Calculation`
+9. `Duplicate Report Identification`
+10. `Geospatial Great-Circle Haversine Formula`
+11. `Spatio-Temporal DBSCAN Clustering`
+12. `Multi-Factor Explainable Risk Scoring`
+13. `End-to-End Report Submission Workflow`
+14. `Cluster-to-Incident Transformation`
+15. `Responsible AI Human Review Boundary`
+16. `Incident Confirmation & Department Dispatch`
+17. `Resolution & Remediation Tracking`
+18. `Notification Delivery System`
+19. `Enterprise Audit Trail Verification`
+20. `Geospatial Hotspot Density Aggregation`
+21. `Citizen Feedback Collection`
+22. `SCIP Multi-Tool Agent Orchestration`
 
 ---
 
-*“Different questions. Different teams. One governed supply-chain truth.”*
+## 🏛️ Responsible Municipal Intelligence
+*“Observations from citizens. Interpretations from AI. Decisions from humans.”*
