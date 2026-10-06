@@ -1,9 +1,9 @@
 // SCIP Operations - Geospatial Intelligence View
 import React, { useState, useEffect } from 'react';
-import { api } from '../../services/apiClient.ts';
-import { Report, Incident } from '../../types/scip.ts';
-import { GeospatialMap } from '../map/GeospatialMap.ts';
-import { ReportDetailModal } from './ReportDetailModal.ts';
+import { api } from '../../services/apiClient';
+import { Report, Incident } from '../../types/scip';
+import { GeospatialMap } from '../map/GeospatialMap';
+import { ReportDetailModal } from './ReportDetailModal';
 import {
   MapPin,
   Layers,

@@ -1,9 +1,9 @@
 // SCIP Citizen Portal - My Submitted Reports List
 import React, { useState, useEffect } from 'react';
-import { Report } from '../../types/scip.js';
-import { api } from '../../services/apiClient.js';
-import { useAuth } from '../../context/AuthContext.js';
-import { ReportDetailModal } from './ReportDetailModal.js';
+import { Report } from '../../types/scip';
+import { api } from '../../services/apiClient';
+import { useAuth } from '../../context/AuthContext';
+import { ReportDetailModal } from './ReportDetailModal';
 import {
   ListFilter,
   Search,
@@ -65,11 +65,11 @@ export const MyReportsView: React.FC<MyReportsViewProps> = ({
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'resolved':
-        return 'text-emerald-700 bg-emerald-50 border-emerald-200';
+        return 'text-emerald-800 bg-emerald-100/70 border-emerald-300 font-semibold';
       case 'assigned':
       case 'linked':
       case 'under_review':
-        return 'text-indigo-700 bg-indigo-50 border-indigo-200';
+        return 'text-emerald-700 bg-emerald-50 border-emerald-200 font-semibold';
       default:
         return 'text-slate-700 bg-slate-50 border-slate-200';
     }
@@ -78,17 +78,17 @@ export const MyReportsView: React.FC<MyReportsViewProps> = ({
   return (
     <div className="space-y-6 max-w-6xl mx-auto py-4">
       {/* Header */}
-      <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-200 pb-4">
+      <div className="flex flex-wrap items-center justify-between gap-4 border-b border-emerald-100 pb-4">
         <div>
           <h1 className="text-xl font-bold text-slate-900">My Community Observations</h1>
-          <p className="text-xs text-slate-500 mt-1">
+          <p className="text-xs text-emerald-700/80 font-medium mt-1">
             Track submitted reports, view automated AI analysis results, and review municipal action status.
           </p>
         </div>
 
         <button
           onClick={onNavigateToSubmit}
-          className="px-4 py-2 text-xs font-semibold text-white bg-indigo-600 hover:bg-indigo-700 rounded-md shadow-xs flex items-center gap-1.5 transition-colors"
+          className="px-4 py-2 text-xs font-semibold text-white bg-emerald-600 hover:bg-emerald-700 rounded-xl shadow-xs flex items-center gap-1.5 transition-colors"
         >
           <PlusCircle className="w-4 h-4" />
           <span>New Report</span>
@@ -96,9 +96,9 @@ export const MyReportsView: React.FC<MyReportsViewProps> = ({
       </div>
 
       {/* Filter and Search Bar */}
-      <div className="bg-white p-3.5 rounded-lg border border-slate-200 flex flex-wrap items-center justify-between gap-3 text-xs">
-        <div className="flex items-center gap-2 flex-1 min-w-[200px]">
-          <Search className="w-4 h-4 text-slate-400 shrink-0" />
+      <div className="bg-white p-4 rounded-2xl border border-emerald-100/90 flex flex-wrap items-center justify-between gap-3 text-xs shadow-xs">
+        <div className="flex items-center gap-2 flex-1 min-w-[200px] bg-emerald-50/20 px-3 py-1.5 rounded-xl border border-emerald-100">
+          <Search className="w-4 h-4 text-emerald-600 shrink-0" />
           <input
             type="text"
             value={searchTerm}
@@ -112,7 +112,7 @@ export const MyReportsView: React.FC<MyReportsViewProps> = ({
           <select
             value={categoryFilter}
             onChange={e => setCategoryFilter(e.target.value)}
-            className="px-2.5 py-1.5 bg-slate-50 border border-slate-200 rounded-md text-slate-700 text-xs focus:outline-hidden"
+            className="px-3 py-1.5 bg-emerald-50/30 border border-emerald-100 rounded-xl text-slate-700 text-xs focus:outline-hidden"
           >
             <option value="ALL">All Categories</option>
             <option value="Water & Drainage">Water & Drainage</option>
@@ -125,7 +125,7 @@ export const MyReportsView: React.FC<MyReportsViewProps> = ({
           <select
             value={statusFilter}
             onChange={e => setStatusFilter(e.target.value)}
-            className="px-2.5 py-1.5 bg-slate-50 border border-slate-200 rounded-md text-slate-700 text-xs focus:outline-hidden"
+            className="px-3 py-1.5 bg-emerald-50/30 border border-emerald-100 rounded-xl text-slate-700 text-xs focus:outline-hidden"
           >
             <option value="ALL">All Statuses</option>
             <option value="submitted">Submitted</option>
@@ -138,16 +138,16 @@ export const MyReportsView: React.FC<MyReportsViewProps> = ({
       </div>
 
       {/* Reports Table */}
-      <div className="bg-white rounded-lg border border-slate-200 overflow-hidden">
+      <div className="bg-white rounded-2xl border border-emerald-100/80 overflow-hidden shadow-xs">
         {isLoading ? (
           <div className="py-16 text-center text-xs text-slate-400">Loading your reports...</div>
         ) : filtered.length === 0 ? (
           <div className="py-16 text-center text-xs text-slate-500 space-y-3">
-            <FileCheck className="w-8 h-8 text-slate-300 mx-auto" />
+            <FileCheck className="w-8 h-8 text-emerald-300 mx-auto" />
             <div>No matching reports found.</div>
             <button
               onClick={onNavigateToSubmit}
-              className="text-xs text-indigo-600 hover:text-indigo-800 font-medium"
+              className="text-xs text-emerald-600 hover:text-emerald-800 font-semibold"
             >
               Submit your first report
             </button>
@@ -155,51 +155,51 @@ export const MyReportsView: React.FC<MyReportsViewProps> = ({
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs border-collapse">
-              <thead className="bg-slate-50 border-b border-slate-200 text-slate-600 font-semibold">
+              <thead className="bg-emerald-50/50 border-b border-emerald-100 text-emerald-950 font-semibold">
                 <tr>
-                  <th className="p-3">Reference ID</th>
-                  <th className="p-3">Title & Observation</th>
-                  <th className="p-3">Category</th>
-                  <th className="p-3">Location</th>
-                  <th className="p-3">Status</th>
-                  <th className="p-3 text-right">Date</th>
-                  <th className="p-3 text-center">Action</th>
+                  <th className="p-3.5">Reference ID</th>
+                  <th className="p-3.5">Title & Observation</th>
+                  <th className="p-3.5">Category</th>
+                  <th className="p-3.5">Location</th>
+                  <th className="p-3.5">Status</th>
+                  <th className="p-3.5 text-right">Date</th>
+                  <th className="p-3.5 text-center">Action</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100 text-slate-700">
                 {filtered.map(report => (
                   <tr
                     key={report.id}
-                    className="hover:bg-slate-50/80 transition-colors cursor-pointer"
+                    className="hover:bg-emerald-50/40 transition-colors cursor-pointer"
                     onClick={() => setSelectedReportId(report.id)}
                   >
-                    <td className="p-3 font-mono text-[11px] font-semibold text-indigo-600 whitespace-nowrap">
+                    <td className="p-3.5 font-mono text-[11px] font-bold text-emerald-700 whitespace-nowrap">
                       {report.id}
                     </td>
-                    <td className="p-3 font-medium text-slate-900 max-w-xs truncate">
+                    <td className="p-3.5 font-semibold text-slate-900 max-w-xs truncate">
                       {report.title}
                     </td>
-                    <td className="p-3 text-slate-600 whitespace-nowrap">
+                    <td className="p-3.5 text-slate-600 whitespace-nowrap">
                       {report.category}
                     </td>
-                    <td className="p-3 text-slate-500 max-w-xs truncate">
+                    <td className="p-3.5 text-slate-500 max-w-xs truncate">
                       {report.locationName}
                     </td>
-                    <td className="p-3 whitespace-nowrap">
-                      <span className={`px-2 py-0.5 rounded text-[10px] font-semibold border ${getStatusBadge(report.status)}`}>
+                    <td className="p-3.5 whitespace-nowrap">
+                      <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-semibold border ${getStatusBadge(report.status)}`}>
                         {report.status.replace('_', ' ')}
                       </span>
                     </td>
-                    <td className="p-3 text-right font-mono text-[11px] text-slate-400 whitespace-nowrap tabular-nums">
+                    <td className="p-3.5 text-right font-mono text-[11px] text-slate-400 whitespace-nowrap tabular-nums">
                       {new Date(report.createdAt).toLocaleDateString()}
                     </td>
-                    <td className="p-3 text-center whitespace-nowrap">
+                    <td className="p-3.5 text-center whitespace-nowrap">
                       <button
                         onClick={e => {
                           e.stopPropagation();
                           setSelectedReportId(report.id);
                         }}
-                        className="p-1 text-slate-400 hover:text-indigo-600 transition-colors"
+                        className="p-1 text-slate-400 hover:text-emerald-600 transition-colors"
                         title="View details & AI transparency"
                       >
                         <ExternalLink className="w-4 h-4" />

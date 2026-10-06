@@ -1,6 +1,6 @@
 // SCIP - Interactive Geospatial Intelligence Map Component
 import React, { useState } from 'react';
-import { Report, Incident } from '../../types/scip.ts';
+import { Report, Incident } from '../../types/scip';
 import { MapPin, AlertCircle, Layers, Eye, Navigation } from 'lucide-react';
 
 interface GeospatialMapProps {

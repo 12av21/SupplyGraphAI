@@ -1,7 +1,7 @@
 // SCIP Administration - Enterprise Governance & Audit Panel
 import React, { useState, useEffect } from 'react';
-import { api } from '../../services/apiClient.ts';
-import { User, Department, AuditLog, UserRole } from '../../types/scip.ts';
+import { api } from '../../services/apiClient';
+import { User, Department, AuditLog, UserRole } from '../../types/scip';
 import {
   Users,
   Building2,

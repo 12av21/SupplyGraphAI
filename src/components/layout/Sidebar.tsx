@@ -1,6 +1,7 @@
 // SCIP Layout - Enterprise Light Sidebar Navigation
 import React from 'react';
-import { useAuth } from '../../context/AuthContext.ts';
+import { useAuth } from '../../context/AuthContext';
+import { useTheme } from '../../context/ThemeContext';
 import {
   Home,
   Info,
@@ -15,7 +16,8 @@ import {
   Cpu,
   ShieldCheck,
   CheckCircle2,
-  X
+  X,
+  Palette
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -32,6 +34,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   onCloseMobile
 }) => {
   const { role, hasPermission } = useAuth();
+  const { activeTheme, openThemeStudio } = useTheme();
 
   const handleNav = (tab: string) => {
     onNavigate(tab);
@@ -75,24 +78,24 @@ export const Sidebar: React.FC<SidebarProps> = ({
             <nav className="space-y-0.5">
               <button
                 onClick={() => handleNav('home')}
-                className={`w-full flex items-center gap-3 px-3 py-2 text-xs font-medium rounded-md transition-colors ${
+                className={`w-full flex items-center gap-3 px-3 py-2 text-xs font-medium rounded-lg transition-colors ${
                   currentTab === 'home'
-                    ? 'bg-indigo-50 text-indigo-700 font-semibold'
+                    ? 'bg-emerald-50 text-emerald-800 font-semibold shadow-xs'
                     : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
                 }`}
               >
-                <Home className="w-4 h-4 shrink-0" />
+                <Home className={`w-4 h-4 shrink-0 ${currentTab === 'home' ? 'text-emerald-600' : 'text-slate-400'}`} />
                 <span>Public Portal</span>
               </button>
               <button
                 onClick={() => handleNav('about')}
-                className={`w-full flex items-center gap-3 px-3 py-2 text-xs font-medium rounded-md transition-colors ${
+                className={`w-full flex items-center gap-3 px-3 py-2 text-xs font-medium rounded-lg transition-colors ${
                   currentTab === 'about'
-                    ? 'bg-indigo-50 text-indigo-700 font-semibold'
+                    ? 'bg-emerald-50 text-emerald-800 font-semibold shadow-xs'
                     : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
                 }`}
               >
-                <Info className="w-4 h-4 shrink-0" />
+                <Info className={`w-4 h-4 shrink-0 ${currentTab === 'about' ? 'text-emerald-600' : 'text-slate-400'}`} />
                 <span>About & Responsible AI</span>
               </button>
             </nav>
@@ -106,35 +109,35 @@ export const Sidebar: React.FC<SidebarProps> = ({
             <nav className="space-y-0.5">
               <button
                 onClick={() => handleNav('citizen-dashboard')}
-                className={`w-full flex items-center gap-3 px-3 py-2 text-xs font-medium rounded-md transition-colors ${
+                className={`w-full flex items-center gap-3 px-3 py-2 text-xs font-medium rounded-lg transition-colors ${
                   currentTab === 'citizen-dashboard'
-                    ? 'bg-indigo-50 text-indigo-700 font-semibold'
+                    ? 'bg-emerald-50 text-emerald-800 font-semibold shadow-xs'
                     : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
                 }`}
               >
-                <LayoutDashboard className="w-4 h-4 shrink-0" />
+                <LayoutDashboard className={`w-4 h-4 shrink-0 ${currentTab === 'citizen-dashboard' ? 'text-emerald-600' : 'text-slate-400'}`} />
                 <span>Citizen Dashboard</span>
               </button>
               <button
                 onClick={() => handleNav('submit-report')}
-                className={`w-full flex items-center gap-3 px-3 py-2 text-xs font-medium rounded-md transition-colors ${
+                className={`w-full flex items-center gap-3 px-3 py-2 text-xs font-medium rounded-lg transition-colors ${
                   currentTab === 'submit-report'
-                    ? 'bg-indigo-50 text-indigo-700 font-semibold'
-                    : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+                    ? 'bg-emerald-600 text-white font-semibold shadow-xs'
+                    : 'text-emerald-700 bg-emerald-50/60 hover:bg-emerald-100/70 border border-emerald-200/60'
                 }`}
               >
-                <PlusCircle className="w-4 h-4 shrink-0 text-indigo-600" />
-                <span className="font-medium text-indigo-700">Submit New Report</span>
+                <PlusCircle className={`w-4 h-4 shrink-0 ${currentTab === 'submit-report' ? 'text-white' : 'text-emerald-600'}`} />
+                <span className="font-semibold">Submit New Report</span>
               </button>
               <button
                 onClick={() => handleNav('my-reports')}
-                className={`w-full flex items-center gap-3 px-3 py-2 text-xs font-medium rounded-md transition-colors ${
+                className={`w-full flex items-center gap-3 px-3 py-2 text-xs font-medium rounded-lg transition-colors ${
                   currentTab === 'my-reports'
-                    ? 'bg-indigo-50 text-indigo-700 font-semibold'
+                    ? 'bg-emerald-50 text-emerald-800 font-semibold shadow-xs'
                     : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
                 }`}
               >
-                <ListOrdered className="w-4 h-4 shrink-0" />
+                <ListOrdered className={`w-4 h-4 shrink-0 ${currentTab === 'my-reports' ? 'text-emerald-600' : 'text-slate-400'}`} />
                 <span>My Submitted Reports</span>
               </button>
             </nav>
@@ -151,57 +154,57 @@ export const Sidebar: React.FC<SidebarProps> = ({
             <nav className="space-y-0.5">
               <button
                 onClick={() => handleNav('intel-dashboard')}
-                className={`w-full flex items-center gap-3 px-3 py-2 text-xs font-medium rounded-md transition-colors ${
+                className={`w-full flex items-center gap-3 px-3 py-2 text-xs font-medium rounded-lg transition-colors ${
                   currentTab === 'intel-dashboard'
-                    ? 'bg-indigo-50 text-indigo-700 font-semibold'
+                    ? 'bg-emerald-50 text-emerald-800 font-semibold shadow-xs'
                     : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
                 }`}
               >
-                <Radio className="w-4 h-4 shrink-0" />
+                <Radio className={`w-4 h-4 shrink-0 ${currentTab === 'intel-dashboard' ? 'text-emerald-600' : 'text-slate-400'}`} />
                 <span>Intelligence Command</span>
               </button>
               <button
                 onClick={() => handleNav('incidents')}
-                className={`w-full flex items-center gap-3 px-3 py-2 text-xs font-medium rounded-md transition-colors ${
+                className={`w-full flex items-center gap-3 px-3 py-2 text-xs font-medium rounded-lg transition-colors ${
                   currentTab === 'incidents'
-                    ? 'bg-indigo-50 text-indigo-700 font-semibold'
+                    ? 'bg-emerald-50 text-emerald-800 font-semibold shadow-xs'
                     : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
                 }`}
               >
-                <AlertOctagon className="w-4 h-4 shrink-0" />
+                <AlertOctagon className={`w-4 h-4 shrink-0 ${currentTab === 'incidents' ? 'text-emerald-600' : 'text-slate-400'}`} />
                 <span>Incident Queue & Review</span>
               </button>
               <button
                 onClick={() => handleNav('investigation')}
-                className={`w-full flex items-center gap-3 px-3 py-2 text-xs font-medium rounded-md transition-colors ${
+                className={`w-full flex items-center gap-3 px-3 py-2 text-xs font-medium rounded-lg transition-colors ${
                   currentTab === 'investigation'
-                    ? 'bg-indigo-50 text-indigo-700 font-semibold'
+                    ? 'bg-emerald-50 text-emerald-800 font-semibold shadow-xs'
                     : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
                 }`}
               >
-                <Search className="w-4 h-4 shrink-0" />
+                <Search className={`w-4 h-4 shrink-0 ${currentTab === 'investigation' ? 'text-emerald-600' : 'text-slate-400'}`} />
                 <span>Report Investigation</span>
               </button>
               <button
                 onClick={() => handleNav('map')}
-                className={`w-full flex items-center gap-3 px-3 py-2 text-xs font-medium rounded-md transition-colors ${
+                className={`w-full flex items-center gap-3 px-3 py-2 text-xs font-medium rounded-lg transition-colors ${
                   currentTab === 'map'
-                    ? 'bg-indigo-50 text-indigo-700 font-semibold'
+                    ? 'bg-emerald-50 text-emerald-800 font-semibold shadow-xs'
                     : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
                 }`}
               >
-                <MapPin className="w-4 h-4 shrink-0" />
+                <MapPin className={`w-4 h-4 shrink-0 ${currentTab === 'map' ? 'text-emerald-600' : 'text-slate-400'}`} />
                 <span>Geospatial Intelligence</span>
               </button>
               <button
                 onClick={() => handleNav('trends')}
-                className={`w-full flex items-center gap-3 px-3 py-2 text-xs font-medium rounded-md transition-colors ${
+                className={`w-full flex items-center gap-3 px-3 py-2 text-xs font-medium rounded-lg transition-colors ${
                   currentTab === 'trends'
-                    ? 'bg-indigo-50 text-indigo-700 font-semibold'
+                    ? 'bg-emerald-50 text-emerald-800 font-semibold shadow-xs'
                     : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
                 }`}
               >
-                <TrendingUp className="w-4 h-4 shrink-0" />
+                <TrendingUp className={`w-4 h-4 shrink-0 ${currentTab === 'trends' ? 'text-emerald-600' : 'text-slate-400'}`} />
                 <span>Trends & Recurrence</span>
               </button>
             </nav>
@@ -215,13 +218,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
             <nav className="space-y-0.5">
               <button
                 onClick={() => handleNav('agent')}
-                className={`w-full flex items-center gap-3 px-3 py-2 text-xs font-medium rounded-md transition-colors ${
+                className={`w-full flex items-center gap-3 px-3 py-2 text-xs font-medium rounded-lg transition-colors ${
                   currentTab === 'agent'
-                    ? 'bg-indigo-50 text-indigo-700 font-semibold'
+                    ? 'bg-emerald-50 text-emerald-800 font-semibold shadow-xs'
                     : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
                 }`}
               >
-                <Cpu className="w-4 h-4 shrink-0 text-indigo-600" />
+                <Cpu className={`w-4 h-4 shrink-0 ${currentTab === 'agent' ? 'text-emerald-600' : 'text-slate-400'}`} />
                 <span>SCIP Intelligence Agent</span>
               </button>
             </nav>
@@ -238,13 +241,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
             <nav className="space-y-0.5">
               <button
                 onClick={() => handleNav('admin-panel')}
-                className={`w-full flex items-center gap-3 px-3 py-2 text-xs font-medium rounded-md transition-colors ${
+                className={`w-full flex items-center gap-3 px-3 py-2 text-xs font-medium rounded-lg transition-colors ${
                   currentTab === 'admin-panel'
-                    ? 'bg-indigo-50 text-indigo-700 font-semibold'
+                    ? 'bg-emerald-50 text-emerald-800 font-semibold shadow-xs'
                     : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
                 }`}
               >
-                <ShieldCheck className="w-4 h-4 shrink-0" />
+                <ShieldCheck className={`w-4 h-4 shrink-0 ${currentTab === 'admin-panel' ? 'text-emerald-600' : 'text-slate-400'}`} />
                 <span>Admin & Audit Trail</span>
               </button>
             </nav>
@@ -258,14 +261,40 @@ export const Sidebar: React.FC<SidebarProps> = ({
             <nav className="space-y-0.5">
               <button
                 onClick={() => handleNav('tests')}
-                className={`w-full flex items-center gap-3 px-3 py-2 text-xs font-medium rounded-md transition-colors ${
+                className={`w-full flex items-center gap-3 px-3 py-2 text-xs font-medium rounded-lg transition-colors ${
                   currentTab === 'tests'
-                    ? 'bg-indigo-50 text-indigo-700 font-semibold'
+                    ? 'bg-emerald-50 text-emerald-800 font-semibold shadow-xs'
                     : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
                 }`}
               >
-                <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-600" />
+                <CheckCircle2 className={`w-4 h-4 shrink-0 ${currentTab === 'tests' ? 'text-emerald-600' : 'text-emerald-500'}`} />
                 <span>22-Point Audit Suite</span>
+              </button>
+            </nav>
+          </div>
+
+          {/* Design System & Color Theme Studio */}
+          <div>
+            <div className="px-3 text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-1">
+              Design System
+            </div>
+            <nav className="space-y-0.5">
+              <button
+                onClick={() => {
+                  openThemeStudio();
+                  onCloseMobile();
+                }}
+                className="w-full flex items-center justify-between px-3 py-2 text-xs font-medium rounded-lg transition-colors text-slate-700 hover:bg-slate-50 hover:text-slate-900 group cursor-pointer"
+              >
+                <div className="flex items-center gap-3">
+                  <Palette className="w-4 h-4 shrink-0 text-slate-400 group-hover:text-slate-700" style={{ color: activeTheme.primary }} />
+                  <span>Color Theme Studio</span>
+                </div>
+                <span
+                  className="w-2.5 h-2.5 rounded-full shrink-0 ring-1 ring-white"
+                  style={{ backgroundColor: activeTheme.primary }}
+                  title={`Active: ${activeTheme.name}`}
+                />
               </button>
             </nav>
           </div>

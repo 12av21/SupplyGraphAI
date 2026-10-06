@@ -1,7 +1,7 @@
 // SCIP AI/ML Foundation - TF-IDF Vectorizer & Cosine Similarity Engine
 // Implements mathematical TF-IDF feature extraction and cosine vector similarity
 
-import { extractBagOfTerms } from './preprocessor.ts';
+import { extractBagOfTerms } from './preprocessor';
 
 export interface DocumentVector {
   id: string;

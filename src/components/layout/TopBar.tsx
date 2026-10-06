@@ -1,8 +1,10 @@
 // SCIP Layout - Enterprise Light Top Navigation Bar
 import React, { useState, useEffect } from 'react';
-import { useAuth } from '../../context/AuthContext.ts';
-import { api } from '../../services/apiClient.ts';
-import { Notification, UserRole } from '../../types/scip.ts';
+import { useAuth } from '../../context/AuthContext';
+import { useTheme } from '../../context/ThemeContext';
+import { ThemeStudioModal } from '../theme/ThemeStudioModal';
+import { api } from '../../services/apiClient';
+import { Notification, UserRole } from '../../types/scip';
 import {
   Bell,
   CheckCircle,
@@ -11,7 +13,8 @@ import {
   User as UserIcon,
   LogOut,
   Sparkles,
-  ChevronDown
+  ChevronDown,
+  Palette
 } from 'lucide-react';
 
 interface TopBarProps {
@@ -22,6 +25,7 @@ interface TopBarProps {
 
 export const TopBar: React.FC<TopBarProps> = ({ currentTab, onNavigate, onToggleMobileSidebar }) => {
   const { user, role, switchDemoRole, logout } = useAuth();
+  const { activeTheme, isThemeStudioOpen, openThemeStudio, closeThemeStudio } = useTheme();
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [isNotifOpen, setIsNotifOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
@@ -85,14 +89,14 @@ export const TopBar: React.FC<TopBarProps> = ({ currentTab, onNavigate, onToggle
         </button>
 
         <div className="flex items-center gap-2 cursor-pointer" onClick={() => onNavigate('home')}>
-          <div className="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center text-white font-bold text-sm shadow-xs">
+          <div className="w-8 h-8 rounded-lg bg-emerald-600 flex items-center justify-center text-white font-bold text-sm shadow-xs">
             SC
           </div>
           <div>
             <div className="font-semibold text-slate-900 text-base tracking-tight leading-none">
               SCIP
             </div>
-            <div className="text-[10px] text-slate-500 font-medium tracking-wide leading-none mt-0.5 hidden sm:block">
+            <div className="text-[10px] text-emerald-600/90 font-medium tracking-wide leading-none mt-0.5 hidden sm:block">
               Community Intelligence Platform
             </div>
           </div>
@@ -109,16 +113,16 @@ export const TopBar: React.FC<TopBarProps> = ({ currentTab, onNavigate, onToggle
         <div className="relative">
           <button
             onClick={() => setIsRoleDropdownOpen(!isRoleDropdownOpen)}
-            className="flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-medium text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-md border border-slate-200 transition-colors"
+            className="flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-medium text-slate-700 bg-emerald-50/60 hover:bg-emerald-100/70 rounded-lg border border-emerald-200/80 transition-colors"
             title="Switch active role to test access control"
           >
             <span className="text-slate-500 font-normal">Role:</span>
-            <span className="font-semibold uppercase tracking-wider text-indigo-700 text-[11px]">{role}</span>
-            <ChevronDown className="w-3.5 h-3.5 text-slate-500" />
+            <span className="font-semibold uppercase tracking-wider text-emerald-700 text-[11px]">{role}</span>
+            <ChevronDown className="w-3.5 h-3.5 text-emerald-600" />
           </button>
 
           {isRoleDropdownOpen && (
-            <div className="absolute right-0 mt-1 w-48 bg-white rounded-lg shadow-lg border border-slate-200 py-1 z-50">
+            <div className="absolute right-0 mt-1 w-48 bg-white rounded-xl shadow-lg border border-emerald-100 py-1 z-50">
               <div className="px-3 py-1.5 text-[11px] font-semibold text-slate-400 uppercase tracking-wider border-b border-slate-100">
                 Switch Test Persona
               </div>
@@ -129,10 +133,10 @@ export const TopBar: React.FC<TopBarProps> = ({ currentTab, onNavigate, onToggle
                     switchDemoRole(r);
                     setIsRoleDropdownOpen(false);
                   }}
-                  className={`w-full text-left px-3 py-2 text-xs flex items-center justify-between hover:bg-slate-50 transition-colors ${role === r ? 'font-semibold text-indigo-600 bg-indigo-50/50' : 'text-slate-700'}`}
+                  className={`w-full text-left px-3 py-2 text-xs flex items-center justify-between hover:bg-emerald-50/60 transition-colors ${role === r ? 'font-semibold text-emerald-700 bg-emerald-50' : 'text-slate-700'}`}
                 >
                   <span className="capitalize">{r}</span>
-                  {role === r && <CheckCircle className="w-3.5 h-3.5 text-indigo-600" />}
+                  {role === r && <CheckCircle className="w-3.5 h-3.5 text-emerald-600" />}
                 </button>
               ))}
             </div>
@@ -142,33 +146,52 @@ export const TopBar: React.FC<TopBarProps> = ({ currentTab, onNavigate, onToggle
         {/* Quick Audit Suite Action */}
         <button
           onClick={() => onNavigate('tests')}
-          className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-slate-700 bg-white hover:bg-slate-50 rounded-md border border-slate-200 transition-colors"
+          className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-emerald-800 bg-emerald-50 hover:bg-emerald-100/80 rounded-lg border border-emerald-200 transition-colors"
         >
-          <Sparkles className="w-3.5 h-3.5 text-indigo-600" />
+          <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
           <span>Audit Tests</span>
+        </button>
+
+        {/* Theme & Palette Studio (Click to inspect or copy to project) */}
+        <button
+          onClick={openThemeStudio}
+          className="inline-flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-medium rounded-lg border transition-all hover:shadow-xs cursor-pointer"
+          style={{
+            backgroundColor: activeTheme.primaryLight,
+            borderColor: activeTheme.primaryBorder,
+            color: activeTheme.primary
+          }}
+          title="Inspect Color Theme & Copy to Your Project"
+        >
+          <span
+            className="w-2.5 h-2.5 rounded-full ring-1 ring-white shrink-0"
+            style={{ backgroundColor: activeTheme.primary }}
+          />
+          <span className="hidden sm:inline font-semibold">Theme</span>
+          <Palette className="w-3.5 h-3.5" />
         </button>
 
         {/* Notifications Dropdown */}
         <div className="relative">
           <button
             onClick={() => setIsNotifOpen(!isNotifOpen)}
-            className="relative p-2 text-slate-600 hover:text-slate-900 rounded-md hover:bg-slate-100 transition-colors"
+            className="relative p-2 text-slate-600 hover:text-slate-900 rounded-lg hover:bg-slate-100 transition-colors"
             aria-label="Notifications"
           >
             <Bell className="w-4 h-4" />
             {unreadCount > 0 && (
-              <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-indigo-600 rounded-full" />
+              <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-emerald-600 rounded-full" />
             )}
           </button>
 
           {isNotifOpen && (
-            <div className="absolute right-0 mt-2 w-80 sm:w-96 bg-white rounded-lg shadow-lg border border-slate-200 py-2 z-50">
+            <div className="absolute right-0 mt-2 w-80 sm:w-96 bg-white rounded-xl shadow-lg border border-slate-200 py-2 z-50">
               <div className="flex items-center justify-between px-4 py-2 border-b border-slate-100">
                 <span className="text-xs font-semibold text-slate-900">Notifications ({notifications.length})</span>
                 {unreadCount > 0 && (
                   <button
                     onClick={handleMarkAllRead}
-                    className="text-[11px] text-indigo-600 hover:text-indigo-800 font-medium"
+                    className="text-[11px] text-emerald-600 hover:text-emerald-800 font-medium"
                   >
                     Mark all read
                   </button>
@@ -213,7 +236,7 @@ export const TopBar: React.FC<TopBarProps> = ({ currentTab, onNavigate, onToggle
             onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
             className="flex items-center gap-2 p-1.5 rounded-md hover:bg-slate-100 transition-colors"
           >
-            <div className="w-7 h-7 rounded-full bg-slate-200 flex items-center justify-center text-slate-700 text-xs font-medium">
+            <div className="w-7 h-7 rounded-full bg-emerald-100 border border-emerald-200 flex items-center justify-center text-emerald-800 text-xs font-semibold">
               {user?.name ? user.name.charAt(0).toUpperCase() : 'U'}
             </div>
             <div className="hidden xl:block text-left text-xs">
@@ -223,11 +246,11 @@ export const TopBar: React.FC<TopBarProps> = ({ currentTab, onNavigate, onToggle
           </button>
 
           {isUserMenuOpen && (
-            <div className="absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-lg border border-slate-200 py-1.5 z-50">
+            <div className="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-lg border border-slate-200 py-1.5 z-50">
               <div className="px-4 py-2 border-b border-slate-100">
                 <div className="text-xs font-semibold text-slate-900">{user?.name}</div>
                 <div className="text-[11px] text-slate-500 truncate">{user?.email}</div>
-                <div className="text-[10px] text-indigo-600 font-medium uppercase mt-0.5">{role}</div>
+                <div className="text-[10px] text-emerald-600 font-semibold uppercase mt-0.5">{role}</div>
               </div>
               <button
                 onClick={() => {
@@ -253,6 +276,9 @@ export const TopBar: React.FC<TopBarProps> = ({ currentTab, onNavigate, onToggle
           )}
         </div>
       </div>
+
+      {/* Theme Studio & Project Exporter Modal */}
+      <ThemeStudioModal isOpen={isThemeStudioOpen} onClose={closeThemeStudio} />
     </header>
   );
 };

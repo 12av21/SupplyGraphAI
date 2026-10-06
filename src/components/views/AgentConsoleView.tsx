@@ -1,7 +1,7 @@
 // SCIP Agent - Multi-Tool Intelligence Agent Console
 import React, { useState } from 'react';
-import { api } from '../../services/apiClient.ts';
-import { AgentBriefing, AgentToolResult } from '../../types/scip.ts';
+import { api } from '../../services/apiClient';
+import { AgentBriefing, AgentToolResult } from '../../types/scip';
 import {
   Cpu,
   Sparkles,

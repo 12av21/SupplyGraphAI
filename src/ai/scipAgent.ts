@@ -2,12 +2,12 @@
 // Orchestrates 10 specialized intelligence tools to transform community observations into structured decision support.
 // Strictly adheres to the Responsible AI principle and transparency standards.
 
-import { Report, Incident, AgentBriefing, AgentToolResult } from '../types/scip.ts';
-import { classifyReport, extractEntities, determineSeverity } from './classifier.ts';
-import { globalVectorizer } from './tfidf.ts';
-import { findSimilarAndDuplicateReports, calculateHaversineDistance } from './duplicateDetector.ts';
-import { detectIncidentClusters } from './incidentClustering.ts';
-import { computeExplainableRisk } from './riskScorer.ts';
+import { Report, Incident, AgentBriefing, AgentToolResult } from '../types/scip';
+import { classifyReport, extractEntities, determineSeverity } from './classifier';
+import { globalVectorizer } from './tfidf';
+import { findSimilarAndDuplicateReports, calculateHaversineDistance } from './duplicateDetector';
+import { detectIncidentClusters } from './incidentClustering';
+import { computeExplainableRisk } from './riskScorer';
 
 export interface AgentContext {
   reports: Report[];

@@ -2,7 +2,7 @@
 // Calculates multidimensional risk scores [0-100] with explicit transparent factors.
 // Shows WHY a priority/risk value was generated.
 
-import { Report, IncidentPriority, RiskFactor, RiskScore } from '../types/scip.ts';
+import { Report, IncidentPriority, RiskFactor, RiskScore } from '../types/scip';
 
 interface RiskEvaluationInput {
   entityType: 'report' | 'incident' | 'cluster';

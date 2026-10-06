@@ -1,8 +1,8 @@
 // SCIP AI/ML Foundation - Duplicate Report Detection Engine
 // Detects whether a report is an observation of an already reported municipal incident
 
-import { Report, SimilarReportMatch } from '../types/scip.ts';
-import { globalVectorizer } from './tfidf.ts';
+import { Report, SimilarReportMatch } from '../types/scip';
+import { globalVectorizer } from './tfidf';
 
 /**
  * Calculate Great-Circle Distance (Haversine Formula) between two coordinates in meters.

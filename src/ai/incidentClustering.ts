@@ -3,9 +3,9 @@
 // Adheres strictly to the Responsible AI principle:
 // "A community report is an observation. An AI-generated incident is an analytical interpretation."
 
-import { Report, SpatioTemporalCluster, IncidentSeverity, IncidentPriority } from '../types/scip.ts';
-import { calculateHaversineDistance, calculateTimeDeltaHours } from './duplicateDetector.ts';
-import { globalVectorizer } from './tfidf.ts';
+import { Report, SpatioTemporalCluster, IncidentSeverity, IncidentPriority } from '../types/scip';
+import { calculateHaversineDistance, calculateTimeDeltaHours } from './duplicateDetector';
+import { globalVectorizer } from './tfidf';
 
 export interface ClusteringConfig {
   maxSpatialDistanceMeters: number; // eps_spatial, default 500m

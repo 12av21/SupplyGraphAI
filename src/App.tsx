@@ -1,26 +1,28 @@
 // Smart Community Intelligence Platform (SCIP) - Master Application Shell
 import React, { useState } from 'react';
-import { AuthProvider, useAuth } from './context/AuthContext.ts';
-import { TopBar } from './components/layout/TopBar.ts';
-import { Sidebar } from './components/layout/Sidebar.ts';
-import { LandingPage } from './components/views/LandingPage.ts';
-import { AboutPage } from './components/views/AboutPage.ts';
-import { CitizenDashboard } from './components/views/CitizenDashboard.ts';
-import { SubmitReportView } from './components/views/SubmitReportView.ts';
-import { MyReportsView } from './components/views/MyReportsView.ts';
-import { IntelligenceDashboard } from './components/views/IntelligenceDashboard.ts';
-import { IncidentManagementView } from './components/views/IncidentManagementView.ts';
-import { ReportInvestigationView } from './components/views/ReportInvestigationView.ts';
-import { GeospatialIntelligenceView } from './components/views/GeospatialIntelligenceView.ts';
-import { TrendAnalysisView } from './components/views/TrendAnalysisView.ts';
-import { AgentConsoleView } from './components/views/AgentConsoleView.ts';
-import { AdminPanelView } from './components/views/AdminPanelView.ts';
-import { TestRunnerView } from './components/views/TestRunnerView.ts';
-import { ReportDetailModal } from './components/views/ReportDetailModal.ts';
-import { Report, Incident } from './types/scip.ts';
+import { AuthProvider, useAuth } from './context/AuthContext';
+import { ThemeProvider, useTheme } from './context/ThemeContext';
+import { TopBar } from './components/layout/TopBar';
+import { Sidebar } from './components/layout/Sidebar';
+import { LandingPage } from './components/views/LandingPage';
+import { AboutPage } from './components/views/AboutPage';
+import { CitizenDashboard } from './components/views/CitizenDashboard';
+import { SubmitReportView } from './components/views/SubmitReportView';
+import { MyReportsView } from './components/views/MyReportsView';
+import { IntelligenceDashboard } from './components/views/IntelligenceDashboard';
+import { IncidentManagementView } from './components/views/IncidentManagementView';
+import { ReportInvestigationView } from './components/views/ReportInvestigationView';
+import { GeospatialIntelligenceView } from './components/views/GeospatialIntelligenceView';
+import { TrendAnalysisView } from './components/views/TrendAnalysisView';
+import { AgentConsoleView } from './components/views/AgentConsoleView';
+import { AdminPanelView } from './components/views/AdminPanelView';
+import { TestRunnerView } from './components/views/TestRunnerView';
+import { ReportDetailModal } from './components/views/ReportDetailModal';
+import { Report, Incident } from './types/scip';
 
 function SCIPMainLayout() {
   const { role } = useAuth();
+  const { activeTheme } = useTheme();
   const [currentTab, setCurrentTab] = useState<string>('home');
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
   const [activeModalReportId, setActiveModalReportId] = useState<string | null>(null);
@@ -34,7 +36,13 @@ function SCIPMainLayout() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-800 flex flex-col font-sans antialiased selection:bg-indigo-600 selection:text-white">
+    <div
+      className="min-h-screen text-slate-800 flex flex-col font-sans antialiased transition-colors duration-200"
+      style={{
+        backgroundColor: activeTheme.surfaceBg,
+        backgroundImage: `radial-gradient(ellipse 80% 80% at 50% -20%, ${activeTheme.primaryLight}, rgba(255,255,255,0))`
+      }}
+    >
       {/* Top Navigation Bar */}
       <TopBar
         currentTab={currentTab}
@@ -53,7 +61,7 @@ function SCIPMainLayout() {
         />
 
         {/* Dynamic Content Viewport */}
-        <main className="flex-1 overflow-y-auto p-4 sm:p-6 md:p-8 bg-slate-50">
+        <main className="flex-1 overflow-y-auto p-4 sm:p-6 md:p-8">
           {currentTab === 'home' && (
             <LandingPage onNavigate={setCurrentTab} />
           )}
@@ -143,8 +151,10 @@ function SCIPMainLayout() {
 
 export default function App() {
   return (
-    <AuthProvider>
-      <SCIPMainLayout />
-    </AuthProvider>
+    <ThemeProvider>
+      <AuthProvider>
+        <SCIPMainLayout />
+      </AuthProvider>
+    </ThemeProvider>
   );
 }

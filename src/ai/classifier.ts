@@ -1,8 +1,8 @@
 // SCIP AI/ML Foundation - Classification & Entity Extraction Engine
 // Supervised centroid-based TF-IDF classifier and domain entity extractor
 
-import { ReportCategory, UrgencyLevel } from '../types/scip.ts';
-import { globalVectorizer, DocumentVector } from './tfidf.ts';
+import { ReportCategory, UrgencyLevel } from '../types/scip';
+import { globalVectorizer, DocumentVector } from './tfidf';
 
 interface CategoryProfile {
   category: ReportCategory;
