@@ -1,5 +1,5 @@
 // Smart Community Intelligence Platform (SCIP) - Master Application Shell
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { ThemeProvider, useTheme } from './context/ThemeContext';
 import { TopBar } from './components/layout/TopBar';
@@ -18,14 +18,31 @@ import { AgentConsoleView } from './components/views/AgentConsoleView';
 import { AdminPanelView } from './components/views/AdminPanelView';
 import { TestRunnerView } from './components/views/TestRunnerView';
 import { ReportDetailModal } from './components/views/ReportDetailModal';
+import { AuthModal } from './components/views/AuthModal';
 import { Report, Incident } from './types/scip';
 
 function SCIPMainLayout() {
-  const { role } = useAuth();
+  const { user, role, isAuthenticated } = useAuth();
   const { activeTheme } = useTheme();
   const [currentTab, setCurrentTab] = useState<string>('home');
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
   const [activeModalReportId, setActiveModalReportId] = useState<string | null>(null);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [authModalMode, setAuthModalMode] = useState<'login' | 'signup'>('login');
+
+  const handleOpenAuth = (mode: 'login' | 'signup') => {
+    setAuthModalMode(mode);
+    setIsAuthModalOpen(true);
+  };
+
+  // Route protection guard
+  useEffect(() => {
+    const publicTabs = ['home', 'about', 'tests'];
+    if (!isAuthenticated && !publicTabs.includes(currentTab)) {
+      setCurrentTab('home');
+      handleOpenAuth('login');
+    }
+  }, [currentTab, isAuthenticated]);
 
   const handleSelectReport = (report: Report) => {
     setActiveModalReportId(report.id);
@@ -48,6 +65,7 @@ function SCIPMainLayout() {
         currentTab={currentTab}
         onNavigate={setCurrentTab}
         onToggleMobileSidebar={() => setIsMobileSidebarOpen(prev => !prev)}
+        onOpenAuth={handleOpenAuth}
       />
 
       {/* Main Body */}
@@ -58,12 +76,13 @@ function SCIPMainLayout() {
           onNavigate={setCurrentTab}
           isOpenMobile={isMobileSidebarOpen}
           onCloseMobile={() => setIsMobileSidebarOpen(false)}
+          onOpenAuth={handleOpenAuth}
         />
 
         {/* Dynamic Content Viewport */}
         <main className="flex-1 overflow-y-auto p-4 sm:p-6 md:p-8">
           {currentTab === 'home' && (
-            <LandingPage onNavigate={setCurrentTab} />
+            <LandingPage onNavigate={setCurrentTab} onOpenAuth={handleOpenAuth} />
           )}
 
           {currentTab === 'about' && (
@@ -145,6 +164,17 @@ function SCIPMainLayout() {
           }}
         />
       )}
+
+      {/* Official Municipal Authentication Dialog */}
+      <AuthModal
+        isOpen={isAuthModalOpen}
+        initialMode={authModalMode}
+        onClose={() => setIsAuthModalOpen(false)}
+        onSuccessNavigate={(targetTab) => {
+          setIsAuthModalOpen(false);
+          setCurrentTab(targetTab);
+        }}
+      />
     </div>
   );
 }

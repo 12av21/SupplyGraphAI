@@ -1,8 +1,8 @@
 // SCIP - Auth Context & Permission Hooks
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { User, UserRole, UserPermission } from '../types/scip.js';
-import { api } from '../services/apiClient.js';
-import { db } from '../database/scipDatabase.js';
+import { User, UserRole, UserPermission } from '../types/scip';
+import { api } from '../services/apiClient';
+import { db } from '../database/scipDatabase';
 
 interface AuthContextType {
   user: User | null;
@@ -81,15 +81,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Initial user load from local storage or default to citizen
+    // Initial user load from local storage if previously authenticated
     const storedUser = api.getStoredUser();
-    if (storedUser) {
+    const token = api.getToken();
+    if (storedUser && token) {
       setUser(storedUser);
     } else {
-      // Default to citizen user for instant preview without forced friction
-      const defaultUser = db.getUsers().find(u => u.role === 'citizen') || db.getUsers()[0];
-      setUser(defaultUser);
-      api.setStoredUser(defaultUser);
+      setUser(null);
     }
     setIsLoading(false);
   }, []);
@@ -116,10 +114,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const logout = async () => {
     await api.logout();
-    // Default to citizen
-    const citizen = db.getUsers().find(u => u.role === 'citizen') || db.getUsers()[0];
-    setUser(citizen);
-    api.setStoredUser(citizen);
+    setUser(null);
+    api.setStoredUser(null);
+    api.setToken(null);
   };
 
   const switchDemoRole = async (targetRole: UserRole) => {
