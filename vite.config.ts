@@ -5,11 +5,11 @@ import {defineConfig} from 'vite';
 
 export default defineConfig(() => {
   return {
-    base: process.env.GITHUB_ACTIONS === 'true' ? '/SCIP_MASTER/' : '/',
+    base: process.env.GITHUB_ACTIONS === 'true' ? '/SupplyGraphAI/' : '/',
     plugins: [react(), tailwindcss()],
     resolve: {
       alias: {
-        '@': path.resolve('.'),
+        '@': path.resolve(__dirname, '.'),
       },
     },
     server: {

@@ -1,190 +1,100 @@
-// Smart Community Intelligence Platform (SCIP) - Master Application Shell
-import React, { useState, useEffect } from 'react';
-import { AuthProvider, useAuth } from './context/AuthContext';
-import { ThemeProvider, useTheme } from './context/ThemeContext';
-import { TopBar } from './components/layout/TopBar';
-import { Sidebar } from './components/layout/Sidebar';
-import { LandingPage } from './components/views/LandingPage';
-import { AboutPage } from './components/views/AboutPage';
-import { CitizenDashboard } from './components/views/CitizenDashboard';
-import { SubmitReportView } from './components/views/SubmitReportView';
-import { MyReportsView } from './components/views/MyReportsView';
-import { IntelligenceDashboard } from './components/views/IntelligenceDashboard';
-import { IncidentManagementView } from './components/views/IncidentManagementView';
-import { ReportInvestigationView } from './components/views/ReportInvestigationView';
-import { GeospatialIntelligenceView } from './components/views/GeospatialIntelligenceView';
-import { TrendAnalysisView } from './components/views/TrendAnalysisView';
-import { AgentConsoleView } from './components/views/AgentConsoleView';
-import { AdminPanelView } from './components/views/AdminPanelView';
-import { TestRunnerView } from './components/views/TestRunnerView';
-import { ReportDetailModal } from './components/views/ReportDetailModal';
-import { AuthModal } from './components/views/AuthModal';
-import { Report, Incident } from './types/scip';
+import React, { useState } from 'react';
+import { TopBar, PersonaType } from './components/TopBar';
+import { Sidebar, ActiveTab } from './components/Sidebar';
+import { Dashboard } from './components/Dashboard';
+import { AskSupplyGraph } from './components/AskSupplyGraph';
+import { ConsistencyLab } from './components/ConsistencyLab';
+import { OntologyExplorer } from './components/OntologyExplorer';
+import { MetricRegistryView } from './components/MetricRegistryView';
+import { SupplierRiskMatrix } from './components/SupplierRiskMatrix';
+import { DataLineageView } from './components/DataLineageView';
+import { AuditLogView } from './components/AuditLogView';
+import { TestRunnerView } from './components/TestRunnerView';
+import { DemoGuideModal } from './components/DemoGuideModal';
 
-function SCIPMainLayout() {
-  const { user, role, isAuthenticated } = useAuth();
-  const { activeTheme } = useTheme();
-  const [currentTab, setCurrentTab] = useState<string>('home');
+export default function App() {
+  const [activeTab, setActiveTab] = useState<ActiveTab>('dashboard');
+  const [currentPersona, setCurrentPersona] = useState<PersonaType>('Planning');
+  const [isDemoModalOpen, setIsDemoModalOpen] = useState(false);
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
-  const [activeModalReportId, setActiveModalReportId] = useState<string | null>(null);
-  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
-  const [authModalMode, setAuthModalMode] = useState<'login' | 'signup'>('login');
-
-  const handleOpenAuth = (mode: 'login' | 'signup') => {
-    setAuthModalMode(mode);
-    setIsAuthModalOpen(true);
-  };
-
-  // Route protection guard
-  useEffect(() => {
-    const publicTabs = ['home', 'about', 'tests'];
-    if (!isAuthenticated && !publicTabs.includes(currentTab)) {
-      setCurrentTab('home');
-      handleOpenAuth('login');
-    }
-  }, [currentTab, isAuthenticated]);
-
-  const handleSelectReport = (report: Report) => {
-    setActiveModalReportId(report.id);
-  };
-
-  const handleSelectIncident = (incident: Incident) => {
-    setCurrentTab('incidents');
-  };
 
   return (
-    <div
-      className="min-h-screen text-slate-800 flex flex-col font-sans antialiased transition-colors duration-200"
-      style={{
-        backgroundColor: activeTheme.surfaceBg,
-        backgroundImage: `radial-gradient(ellipse 80% 80% at 50% -20%, ${activeTheme.primaryLight}, rgba(255,255,255,0))`
-      }}
-    >
-      {/* Top Navigation Bar */}
+    <div className="min-h-screen bg-slate-50 text-slate-800 flex flex-col font-sans antialiased selection:bg-indigo-600 selection:text-white">
+      {/* Top Bar */}
       <TopBar
-        currentTab={currentTab}
-        onNavigate={setCurrentTab}
+        currentPersona={currentPersona}
+        onSelectPersona={setCurrentPersona}
+        onOpenDemoTour={() => setIsDemoModalOpen(true)}
+        onRunQuickConsistencyTest={() => setActiveTab('consistency')}
+        activeTab={activeTab}
         onToggleMobileSidebar={() => setIsMobileSidebarOpen(prev => !prev)}
-        onOpenAuth={handleOpenAuth}
       />
 
       {/* Main Body */}
       <div className="flex-1 flex overflow-hidden">
-        {/* Navigation Sidebar */}
+        {/* Sidebar Navigation */}
         <Sidebar
-          currentTab={currentTab}
-          onNavigate={setCurrentTab}
+          activeTab={activeTab}
+          onSelectTab={setActiveTab}
           isOpenMobile={isMobileSidebarOpen}
           onCloseMobile={() => setIsMobileSidebarOpen(false)}
-          onOpenAuth={handleOpenAuth}
         />
 
-        {/* Dynamic Content Viewport */}
-        <main className="flex-1 overflow-y-auto p-4 sm:p-6 md:p-8">
-          {currentTab === 'home' && (
-            <LandingPage onNavigate={setCurrentTab} onOpenAuth={handleOpenAuth} />
+        {/* Dynamic Content Main Area */}
+        <main className="flex-1 overflow-y-auto p-4 sm:p-6 md:p-8 bg-slate-50">
+          {activeTab === 'dashboard' && (
+            <Dashboard onNavigateToTab={setActiveTab} />
           )}
 
-          {currentTab === 'about' && (
-            <AboutPage />
-          )}
-
-          {currentTab === 'citizen-dashboard' && (
-            <CitizenDashboard
-              onNavigateToSubmit={() => setCurrentTab('submit-report')}
-              onNavigateToMyReports={() => setCurrentTab('my-reports')}
-              onOpenIncident={() => setCurrentTab('incidents')}
+          {activeTab === 'ask' && (
+            <AskSupplyGraph
+              currentPersona={currentPersona}
+              onOpenLineageForMetric={() => setActiveTab('lineage')}
             />
           )}
 
-          {currentTab === 'submit-report' && (
-            <SubmitReportView
-              onReportCreated={() => {}}
-              onNavigateToMyReports={() => setCurrentTab('my-reports')}
+          {activeTab === 'risk' && (
+            <SupplierRiskMatrix />
+          )}
+
+          {activeTab === 'consistency' && (
+            <ConsistencyLab />
+          )}
+
+          {activeTab === 'ontology' && (
+            <OntologyExplorer />
+          )}
+
+          {activeTab === 'registry' && (
+            <MetricRegistryView
+              onOpenLineageForMetric={() => setActiveTab('lineage')}
             />
           )}
 
-          {currentTab === 'my-reports' && (
-            <MyReportsView
-              onNavigateToSubmit={() => setCurrentTab('submit-report')}
-              onOpenIncident={() => setCurrentTab('incidents')}
-            />
+          {activeTab === 'lineage' && (
+            <DataLineageView />
           )}
 
-          {currentTab === 'intel-dashboard' && (
-            <IntelligenceDashboard
-              onNavigateToIncidents={() => setCurrentTab('incidents')}
-              onNavigateToInvestigation={() => setCurrentTab('investigation')}
-              onNavigateToMap={() => setCurrentTab('map')}
-              onSelectIncident={handleSelectIncident}
-              onSelectReport={handleSelectReport}
-            />
+          {activeTab === 'audit' && (
+            <AuditLogView />
           )}
 
-          {currentTab === 'incidents' && (
-            <IncidentManagementView
-              onOpenReport={reportId => setActiveModalReportId(reportId)}
-            />
-          )}
-
-          {currentTab === 'investigation' && (
-            <ReportInvestigationView />
-          )}
-
-          {currentTab === 'map' && (
-            <GeospatialIntelligenceView />
-          )}
-
-          {currentTab === 'trends' && (
-            <TrendAnalysisView />
-          )}
-
-          {currentTab === 'agent' && (
-            <AgentConsoleView />
-          )}
-
-          {currentTab === 'admin-panel' && (
-            <AdminPanelView />
-          )}
-
-          {currentTab === 'tests' && (
+          {activeTab === 'tests' && (
             <TestRunnerView />
           )}
         </main>
       </div>
 
-      {/* Global Report Detail Inspector */}
-      {activeModalReportId && (
-        <ReportDetailModal
-          reportId={activeModalReportId}
-          onClose={() => setActiveModalReportId(null)}
-          onOpenIncident={() => {
-            setActiveModalReportId(null);
-            setCurrentTab('incidents');
-          }}
-        />
-      )}
-
-      {/* Official Municipal Authentication Dialog */}
-      <AuthModal
-        isOpen={isAuthModalOpen}
-        initialMode={authModalMode}
-        onClose={() => setIsAuthModalOpen(false)}
-        onSuccessNavigate={(targetTab) => {
-          setIsAuthModalOpen(false);
-          setCurrentTab(targetTab);
+      {/* 3-5 Minute Presentation Walkthrough Guide Modal */}
+      <DemoGuideModal
+        isOpen={isDemoModalOpen}
+        onClose={() => setIsDemoModalOpen(false)}
+        onNavigateToTab={(tab) => {
+          setActiveTab(tab);
+          setIsDemoModalOpen(false);
         }}
+        onSetPersona={setCurrentPersona}
       />
     </div>
-  );
-}
-
-export default function App() {
-  return (
-    <ThemeProvider>
-      <AuthProvider>
-        <SCIPMainLayout />
-      </AuthProvider>
-    </ThemeProvider>
   );
 }
